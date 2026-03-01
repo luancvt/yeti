@@ -3,6 +3,7 @@ package yang
 import (
 	"fmt"
 	"io/fs"
+	"os"
 	"sort"
 	"strings"
 
@@ -82,9 +83,12 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 		}
 	}
 
+	// Process resolves imports, augments, etc. Errors are expected with
+	// real-world vendor models (unresolved augments, missing modules).
+	// We log them but continue — the tree is still usable for browsing.
 	errs := ms.Process()
-	if len(errs) > 0 {
-		return nil, fmt.Errorf("processing modules: %v", errs[0])
+	for _, err := range errs {
+		fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 	}
 
 	tree := &CollectionTree{
