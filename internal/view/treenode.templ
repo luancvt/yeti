@@ -22,15 +22,15 @@ func kindLabel(k yang.NodeKind) string {
 func kindColor(k yang.NodeKind) string {
 	switch k {
 	case yang.KindContainer:
-		return "bg-blue-100 text-blue-700"
+		return "bg-ctr-bg text-ctr-text"
 	case yang.KindList:
-		return "bg-purple-100 text-purple-700"
+		return "bg-lst-bg text-lst-text"
 	case yang.KindLeaf:
-		return "bg-green-100 text-green-700"
+		return "bg-lf-bg text-lf-text"
 	case yang.KindLeafList:
-		return "bg-teal-100 text-teal-700"
+		return "bg-lfls-bg text-lfls-text"
 	default:
-		return "bg-gray-100 text-gray-700"
+		return "bg-raised text-muted"
 	}
 }
 
@@ -43,7 +43,7 @@ templ TreeNode(node yang.Node, collection string) {
 		<div class="flex items-center gap-1 group">
 			if isExpandable(node.Kind) {
 				<button
-					class="w-5 h-5 flex items-center justify-center text-xs text-gray-400 hover:text-gray-700 cursor-pointer"
+					class="w-5 h-5 flex items-center justify-center text-xs text-muted hover:text-body cursor-pointer"
 					onclick="toggleChildren(this)"
 					hx-get={ "/tree/" + collection + node.Path }
 					hx-target="next ul"
@@ -59,7 +59,7 @@ templ TreeNode(node yang.Node, collection string) {
 				{ kindLabel(node.Kind) }
 			</span>
 			<span
-				class="cursor-pointer hover:text-blue-600 hover:underline"
+				class="cursor-pointer hover:text-primary-hover hover:underline"
 				hx-get={ "/detail/" + collection + node.Path }
 				hx-target="#detail-panel"
 				hx-swap="innerHTML"
@@ -67,10 +67,10 @@ templ TreeNode(node yang.Node, collection string) {
 				{ node.Name }
 			</span>
 			if node.Key != "" {
-				<span class="text-xs text-gray-400">[key: { node.Key }]</span>
+				<span class="text-xs text-muted">[key: { node.Key }]</span>
 			}
 			if !node.Config {
-				<span class="text-xs text-orange-500">state</span>
+				<span class="text-xs text-warn">state</span>
 			}
 		</div>
 		if isExpandable(node.Kind) {

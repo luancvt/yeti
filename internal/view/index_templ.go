@@ -43,7 +43,7 @@ func Index(nodes []yang.Node, collection string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex h-screen\"><div class=\"w-1/2 overflow-auto p-4 border-r border-gray-200\"><h1 class=\"text-lg font-bold mb-4\">YANG Tree</h1><ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex h-screen\"><div class=\"w-1/2 overflow-auto p-4 border-r border-border\"><h1 class=\"text-lg font-bold mb-4 text-heading\">YANG Tree</h1><ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -53,7 +53,7 @@ func Index(nodes []yang.Node, collection string) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</ul></div><div id=\"detail-panel\" class=\"w-1/2 overflow-auto p-4\"><p class=\"text-gray-400\">Select a node to view details.</p></div></div><script>\n\t\t\tfunction toggleChildren(btn) {\n\t\t\t\tvar ul = btn.closest('div').nextElementSibling;\n\t\t\t\tif (!btn.dataset.loaded) {\n\t\t\t\t\tbtn.dataset.loaded = 'true';\n\t\t\t\t\tbtn.textContent = '\\u25BC';\n\t\t\t\t\tul.classList.remove('hidden');\n\t\t\t\t} else {\n\t\t\t\t\tvar isHidden = ul.classList.toggle('hidden');\n\t\t\t\t\tbtn.textContent = isHidden ? '\\u25B6' : '\\u25BC';\n\t\t\t\t}\n\t\t\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</ul></div><div id=\"detail-panel\" class=\"w-1/2 overflow-auto p-4 bg-surface\"><p class=\"text-muted\">Select a node to view details.</p></div></div><script>\n\t\t\tfunction toggleChildren(btn) {\n\t\t\t\tvar ul = btn.closest('div').nextElementSibling;\n\t\t\t\tif (!btn.dataset.loaded) {\n\t\t\t\t\tbtn.dataset.loaded = 'true';\n\t\t\t\t\tbtn.textContent = '\\u25BC';\n\t\t\t\t\tul.classList.remove('hidden');\n\t\t\t\t} else {\n\t\t\t\t\tvar isHidden = ul.classList.toggle('hidden');\n\t\t\t\t\tbtn.textContent = isHidden ? '\\u25B6' : '\\u25BC';\n\t\t\t\t}\n\t\t\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

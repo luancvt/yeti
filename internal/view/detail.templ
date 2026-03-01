@@ -6,55 +6,55 @@ import (
 
 templ Detail(node *yang.Node) {
 	<div>
-		<h2 class="text-lg font-bold mb-1">{ node.Name }</h2>
-		<p class="text-sm text-gray-500 mb-4 font-mono">{ node.Path }</p>
+		<h2 class="text-lg font-bold mb-1 text-heading">{ node.Name }</h2>
+		<p class="text-sm text-muted mb-4 font-mono">{ node.Path }</p>
 		if node.Description != "" {
 			<p class="mb-4 text-sm">{ node.Description }</p>
 		}
 		<dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-			<dt class="font-semibold text-gray-500">Kind</dt>
+			<dt class="font-semibold text-muted">Kind</dt>
 			<dd>
 				<span class={ "text-xs px-1 rounded font-mono " + kindColor(node.Kind) }>
 					{ string(node.Kind) }
 				</span>
 			</dd>
-			<dt class="font-semibold text-gray-500">Config</dt>
+			<dt class="font-semibold text-muted">Config</dt>
 			<dd>
 				if node.Config {
-					<span class="text-green-600">read-write</span>
+					<span class="text-ok">read-write</span>
 				} else {
-					<span class="text-orange-500">read-only (state)</span>
+					<span class="text-warn">read-only (state)</span>
 				}
 			</dd>
 			if node.Key != "" {
-				<dt class="font-semibold text-gray-500">List key</dt>
+				<dt class="font-semibold text-muted">List key</dt>
 				<dd class="font-mono">{ node.Key }</dd>
 			}
 			if node.Mandatory {
-				<dt class="font-semibold text-gray-500">Mandatory</dt>
+				<dt class="font-semibold text-muted">Mandatory</dt>
 				<dd>yes</dd>
 			}
 			if node.Default != "" {
-				<dt class="font-semibold text-gray-500">Default</dt>
+				<dt class="font-semibold text-muted">Default</dt>
 				<dd class="font-mono">{ node.Default }</dd>
 			}
 			if node.Units != "" {
-				<dt class="font-semibold text-gray-500">Units</dt>
+				<dt class="font-semibold text-muted">Units</dt>
 				<dd>{ node.Units }</dd>
 			}
 			if node.Type != nil {
-				<dt class="font-semibold text-gray-500">Type</dt>
+				<dt class="font-semibold text-muted">Type</dt>
 				<dd class="font-mono">{ node.Type.Name }</dd>
 				if node.Type.Range != "" {
-					<dt class="font-semibold text-gray-500">Range</dt>
+					<dt class="font-semibold text-muted">Range</dt>
 					<dd class="font-mono">{ node.Type.Range }</dd>
 				}
 				if node.Type.Length != "" {
-					<dt class="font-semibold text-gray-500">Length</dt>
+					<dt class="font-semibold text-muted">Length</dt>
 					<dd class="font-mono">{ node.Type.Length }</dd>
 				}
 				if len(node.Type.Pattern) > 0 {
-					<dt class="font-semibold text-gray-500">Pattern</dt>
+					<dt class="font-semibold text-muted">Pattern</dt>
 					<dd class="font-mono">
 						for _, p := range node.Type.Pattern {
 							<div>{ p }</div>
@@ -62,10 +62,10 @@ templ Detail(node *yang.Node) {
 					</dd>
 				}
 				if len(node.Type.EnumValues) > 0 {
-					<dt class="font-semibold text-gray-500">Enum values</dt>
+					<dt class="font-semibold text-muted">Enum values</dt>
 					<dd class="font-mono">
 						for _, v := range node.Type.EnumValues {
-							<span class="inline-block bg-gray-100 rounded px-1 mr-1 mb-1">{ v }</span>
+							<span class="inline-block bg-raised rounded px-1 mr-1 mb-1">{ v }</span>
 						}
 					</dd>
 				}

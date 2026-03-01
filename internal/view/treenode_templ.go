@@ -30,15 +30,15 @@ func kindLabel(k yang.NodeKind) string {
 func kindColor(k yang.NodeKind) string {
 	switch k {
 	case yang.KindContainer:
-		return "bg-blue-100 text-blue-700"
+		return "bg-ctr-bg text-ctr-text"
 	case yang.KindList:
-		return "bg-purple-100 text-purple-700"
+		return "bg-lst-bg text-lst-text"
 	case yang.KindLeaf:
-		return "bg-green-100 text-green-700"
+		return "bg-lf-bg text-lf-text"
 	case yang.KindLeafList:
-		return "bg-teal-100 text-teal-700"
+		return "bg-lfls-bg text-lfls-text"
 	default:
-		return "bg-gray-100 text-gray-700"
+		return "bg-raised text-muted"
 	}
 }
 
@@ -72,7 +72,7 @@ func TreeNode(node yang.Node, collection string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if isExpandable(node.Kind) {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<button class=\"w-5 h-5 flex items-center justify-center text-xs text-gray-400 hover:text-gray-700 cursor-pointer\" onclick=\"toggleChildren(this)\" hx-get=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<button class=\"w-5 h-5 flex items-center justify-center text-xs text-muted hover:text-body cursor-pointer\" onclick=\"toggleChildren(this)\" hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -126,7 +126,7 @@ func TreeNode(node yang.Node, collection string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span> <span class=\"cursor-pointer hover:text-blue-600 hover:underline\" hx-get=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span> <span class=\"cursor-pointer hover:text-primary-hover hover:underline\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -157,14 +157,14 @@ func TreeNode(node yang.Node, collection string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if node.Key != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span class=\"text-xs text-gray-400\">[key: ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span class=\"text-xs text-muted\">[key: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(node.Key)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 70, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 70, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -176,7 +176,7 @@ func TreeNode(node yang.Node, collection string) templ.Component {
 			}
 		}
 		if !node.Config {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"text-xs text-orange-500\">state</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"text-xs text-warn\">state</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
