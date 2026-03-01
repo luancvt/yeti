@@ -6,10 +6,14 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 			<div class="flex items-center gap-4 px-4 py-2 bg-surface border-b border-border">
 				<span class="font-bold text-heading">Yeti</span>
 				<select
-					id="collection-select"
-					class="bg-raised text-body border border-border rounded px-2 py-1 text-sm"
 					name="collection"
-					onchange="selectCollection(this.value)"
+					class="bg-raised text-body border border-border rounded px-2 py-1 text-sm"
+					hx-get="/models"
+					hx-include="this"
+					hx-target="#model-picker"
+					hx-swap="innerHTML"
+					hx-trigger="change"
+					hx-on::after-settle="document.getElementById('tree-panel').innerHTML = '<p class=\'text-muted\'>Select a model to browse.</p>'; document.getElementById('detail-panel').innerHTML = '<p class=\'text-muted\'>Select a node to view details.</p>'"
 				>
 					<option value="" disabled selected?={ activeCollection == "" }>Collection...</option>
 					for _, name := range collections {
@@ -19,7 +23,7 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 				if activeCollection != "" {
 					<div
 						id="model-picker"
-						hx-get={ "/models/" + activeCollection }
+						hx-get={ "/models?collection=" + activeCollection }
 						hx-trigger="load"
 						hx-swap="innerHTML"
 						data-active-module={ activeModule }
@@ -47,63 +51,22 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 			</div>
 		</div>
 		<script>
-			function selectCollection(value) {
-				htmx.ajax('GET', '/models/' + value, {target: '#model-picker', swap: 'innerHTML'});
-				document.getElementById('tree-panel').innerHTML = '<p class="text-muted">Select a model to browse.</p>';
-				document.getElementById('detail-panel').innerHTML = '<p class="text-muted">Select a node to view details.</p>';
-			}
-
-			function selectModule(collection, module) {
-				history.pushState(null, '', '/' + collection + '/' + module);
-				fetch('/tree/' + collection + '/' + module)
-					.then(function(r) { return r.text(); })
-					.then(function(html) {
-						var panel = document.getElementById('tree-panel');
-						panel.innerHTML = html;
-						htmx.process(panel);
-					});
-				document.getElementById('detail-panel').innerHTML = '<p class="text-muted">Select a node to view details.</p>';
-			}
+			document.body.addEventListener('htmx:afterSwap', function(e) {
+				var mod = e.detail.target.dataset && e.detail.target.dataset.activeModule;
+				if (mod) { var i = e.detail.target.querySelector('input'); if (i) i.value = mod; }
+			});
 
 			function toggleNode(btn) {
+				if (!btn.dataset.loaded) return;
 				var ul = btn.closest('div').nextElementSibling;
-				if (btn.dataset.loaded) {
-					var isHidden = ul.classList.toggle('hidden');
-					btn.textContent = isHidden ? '\u25B6' : '\u25BC';
-					return;
-				}
-				btn.dataset.loaded = 'true';
-				btn.textContent = '\u23F3';
-				fetch(btn.dataset.url)
-					.then(function(r) { return r.text(); })
-					.then(function(html) {
-						ul.innerHTML = html;
-						htmx.process(ul);
-						ul.classList.remove('hidden');
-						btn.textContent = '\u25BC';
-					});
+				ul.classList.toggle('hidden');
+				btn.textContent = ul.classList.contains('hidden') ? '\u25B6' : '\u25BC';
 			}
-
-			// Pre-fill model picker input after it loads via HTMX
-			document.addEventListener('htmx:afterSwap', function(e) {
-				if (e.detail.target.id === 'model-picker') {
-					var activeModule = e.detail.target.dataset.activeModule;
-					if (activeModule) {
-						var input = e.detail.target.querySelector('input');
-						if (input) input.value = activeModule;
-					}
-				}
-			});
 
 			function filterModels(input) {
 				var filter = input.value.toLowerCase();
-				var items = input.parentElement.querySelectorAll('.model-item');
-				items.forEach(function(item) {
-					if (item.textContent.toLowerCase().includes(filter)) {
-						item.style.display = '';
-					} else {
-						item.style.display = 'none';
-					}
+				input.parentElement.querySelectorAll('.model-item').forEach(function(item) {
+					item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
 				});
 			}
 		</script>

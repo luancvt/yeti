@@ -10,11 +10,16 @@ templ ModelPicker(modules []string, collection string) {
 			onfocus="this.parentElement.querySelector('.model-list').classList.remove('hidden')"
 		/>
 		if len(modules) > 0 {
-			<ul class="model-list absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm">
+			<ul class="model-list hidden absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm">
 				for _, name := range modules {
 					<li
 						class="model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary"
-						onclick={ selectModuleAction(collection, name) }
+						hx-get={ "/tree/" + collection + "/" + name }
+						hx-target="#tree-panel"
+						hx-swap="innerHTML"
+						hx-push-url={ "/" + collection + "/" + name }
+						hx-on::before-request="this.closest('.relative').querySelector('input').value = this.textContent.trim(); this.closest('ul').classList.add('hidden')"
+						hx-on::after-settle="document.getElementById('detail-panel').innerHTML = '<p class=\'text-muted\'>Select a node to view details.</p>'"
 					>
 						{ name }
 					</li>
@@ -22,10 +27,4 @@ templ ModelPicker(modules []string, collection string) {
 			</ul>
 		}
 	</div>
-}
-
-script selectModuleAction(collection string, module string) {
-	document.querySelector('.model-list').classList.add('hidden');
-	document.querySelector('#model-picker input').value = module;
-	selectModule(collection, module);
 }

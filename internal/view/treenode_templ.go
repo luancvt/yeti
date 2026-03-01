@@ -72,20 +72,20 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 			return templ_7745c5c3_Err
 		}
 		if isExpandable(node.Kind) {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<button class=\"w-5 h-5 flex items-center justify-center text-xs text-muted hover:text-body cursor-pointer\" onclick=\"toggleNode(this)\" data-url=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<button class=\"w-5 h-5 flex items-center justify-center text-xs text-muted hover:text-body cursor-pointer\" onclick=\"toggleNode(this)\" hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/tree/" + collection + "/" + module + node.Path)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 48, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 48, Col: 62}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\">&#9654;</button> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-target=\"next ul\" hx-swap=\"innerHTML\" hx-trigger=\"click once\" hx-on::after-request=\"this.dataset.loaded = 'true'; this.closest('div').nextElementSibling.classList.remove('hidden'); this.textContent = '\\u25BC'\">&#9654;</button> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -120,7 +120,7 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(kindLabel(node.Kind))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 56, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 60, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -133,7 +133,7 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("/detail/" + collection + "/" + module + node.Path)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 60, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 64, Col: 63}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -146,7 +146,7 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(node.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 64, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 68, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(node.Key)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 67, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/treenode.templ`, Line: 71, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {

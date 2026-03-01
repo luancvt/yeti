@@ -45,7 +45,11 @@ templ TreeNode(node yang.Node, collection string, module string) {
 				<button
 					class="w-5 h-5 flex items-center justify-center text-xs text-muted hover:text-body cursor-pointer"
 					onclick="toggleNode(this)"
-					data-url={ "/tree/" + collection + "/" + module + node.Path }
+					hx-get={ "/tree/" + collection + "/" + module + node.Path }
+					hx-target="next ul"
+					hx-swap="innerHTML"
+					hx-trigger="click once"
+					hx-on::after-request="this.dataset.loaded = 'true'; this.closest('div').nextElementSibling.classList.remove('hidden'); this.textContent = '\u25BC'"
 				>
 					&#9654;
 				</button>

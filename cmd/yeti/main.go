@@ -41,6 +41,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", h.Index)
 	mux.HandleFunc("GET /{collection}/{module}", h.Browse)
+	mux.HandleFunc("GET /models", h.Models)
 	mux.HandleFunc("GET /models/{collection}", h.Models)
 	mux.HandleFunc("GET /tree/{collection}/{module}", h.Tree)
 	mux.HandleFunc("GET /tree/{collection}/{module}/{path...}", h.Tree)

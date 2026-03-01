@@ -34,65 +34,66 @@ func ModelPicker(modules []string, collection string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if len(modules) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<ul class=\"model-list absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<ul class=\"model-list hidden absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, name := range modules {
-				templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, selectModuleAction(collection, name))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" hx-get=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" onclick=\"")
+				var templ_7745c5c3_Var2 string
+				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/tree/" + collection + "/" + name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/modelpicker.templ`, Line: 17, Col: 49}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var2 templ.ComponentScript = selectModuleAction(collection, name)
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2.Call)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" hx-target=\"#tree-panel\" hx-swap=\"innerHTML\" hx-push-url=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("/" + collection + "/" + name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/modelpicker.templ`, Line: 19, Col: 12}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/modelpicker.templ`, Line: 20, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.relative').querySelector('input').value = this.textContent.trim(); this.closest('ul').classList.add('hidden')\" hx-on::after-settle=\"document.getElementById('detail-panel').innerHTML = '<p class=\\'text-muted\\'>Select a node to view details.</p>'\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/modelpicker.templ`, Line: 24, Col: 12}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		return nil
 	})
-}
-
-func selectModuleAction(collection string, module string) templ.ComponentScript {
-	return templ.ComponentScript{
-		Name: `__templ_selectModuleAction_5159`,
-		Function: `function __templ_selectModuleAction_5159(collection, module){document.querySelector('.model-list').classList.add('hidden');
-	document.querySelector('#model-picker input').value = module;
-	selectModule(collection, module);
-}`,
-		Call:       templ.SafeScript(`__templ_selectModuleAction_5159`, collection, module),
-		CallInline: templ.SafeScriptInline(`__templ_selectModuleAction_5159`, collection, module),
-	}
 }
 
 var _ = templruntime.GeneratedTemplate

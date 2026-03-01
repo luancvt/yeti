@@ -51,6 +51,9 @@ func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
 	collection := r.PathValue("collection")
+	if collection == "" {
+		collection = r.FormValue("collection")
+	}
 	tree, ok := h.trees[collection]
 	if !ok {
 		http.NotFound(w, r)
