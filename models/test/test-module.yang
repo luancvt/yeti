@@ -1,0 +1,50 @@
+module test-module {
+  namespace "urn:example:test-module";
+  prefix tm;
+
+  description "A minimal YANG module for testing Yeti.";
+
+  container interfaces {
+    description "Top-level container for interfaces.";
+    config true;
+
+    list interface {
+      key "name";
+      description "An interface entry.";
+
+      leaf name {
+        type string;
+        description "The name of the interface.";
+      }
+
+      leaf mtu {
+        type uint16 {
+          range "68..9192";
+        }
+        default "1500";
+        description "The MTU of the interface.";
+      }
+
+      leaf enabled {
+        type boolean;
+        default "true";
+        description "Whether the interface is enabled.";
+      }
+
+      container counters {
+        config false;
+        description "Interface counters (state data).";
+
+        leaf in-octets {
+          type uint64;
+          description "Total bytes received.";
+        }
+
+        leaf out-octets {
+          type uint64;
+          description "Total bytes transmitted.";
+        }
+      }
+    }
+  }
+}
