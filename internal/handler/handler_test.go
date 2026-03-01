@@ -24,36 +24,79 @@ var _ = Describe("Handler", func() {
 		h := handler.New(trees)
 
 		mux = http.NewServeMux()
-		mux.HandleFunc("GET /", h.Index)
-		mux.HandleFunc("GET /tree/{collection}/{path...}", h.TreeChildren)
-		mux.HandleFunc("GET /detail/{collection}/{path...}", h.Detail)
+		mux.HandleFunc("GET /{$}", h.Index)
+		mux.HandleFunc("GET /{collection}/{module}", h.Browse)
+		mux.HandleFunc("GET /models/{collection}", h.Models)
+		mux.HandleFunc("GET /tree/{collection}/{module}", h.Tree)
+		mux.HandleFunc("GET /tree/{collection}/{module}/{path...}", h.Tree)
+		mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
 	})
 
 	Describe("GET /", func() {
-		It("returns 200 with HTML containing the tree", func() {
+		It("returns 200 with the page shell", func() {
 			req := httptest.NewRequest("GET", "/", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
 
 			Expect(w.Code).To(Equal(http.StatusOK))
 			body := w.Body.String()
-			Expect(body).To(ContainSubstring("YANG Tree"))
-			Expect(body).To(ContainSubstring("interfaces"))
+			Expect(body).To(ContainSubstring("Yeti"))
+			Expect(body).To(ContainSubstring("test"))
 		})
 	})
 
-	Describe("GET /tree/{collection}/{path...}", func() {
-		It("returns children of a container", func() {
-			req := httptest.NewRequest("GET", "/tree/test/interfaces", nil)
+	Describe("GET /{collection}/{module}", func() {
+		It("returns the full page with collection and module pre-selected", func() {
+			req := httptest.NewRequest("GET", "/test/test-module", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
 
 			Expect(w.Code).To(Equal(http.StatusOK))
-			Expect(w.Body.String()).To(ContainSubstring("interface"))
+			body := w.Body.String()
+			Expect(body).To(ContainSubstring("Yeti"))
+			Expect(body).To(ContainSubstring("/tree/test/test-module"))
 		})
 
-		It("returns children of a list", func() {
-			req := httptest.NewRequest("GET", "/tree/test/interfaces/interface", nil)
+		It("returns 404 for unknown collection", func() {
+			req := httptest.NewRequest("GET", "/nonexistent/foo", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusNotFound))
+		})
+	})
+
+	Describe("GET /models/{collection}", func() {
+		It("returns module names for a collection", func() {
+			req := httptest.NewRequest("GET", "/models/test", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusOK))
+			Expect(w.Body.String()).To(ContainSubstring("test-module"))
+		})
+
+		It("returns 404 for unknown collection", func() {
+			req := httptest.NewRequest("GET", "/models/nonexistent", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusNotFound))
+		})
+	})
+
+	Describe("GET /tree/{collection}/{module}/{path...}", func() {
+		It("returns top-level children of a module", func() {
+			req := httptest.NewRequest("GET", "/tree/test/test-module", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusOK))
+			Expect(w.Body.String()).To(ContainSubstring("interfaces"))
+		})
+
+		It("returns children of a container", func() {
+			req := httptest.NewRequest("GET", "/tree/test/test-module/interfaces/interface", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
 
@@ -73,7 +116,7 @@ var _ = Describe("Handler", func() {
 			Expect(w.Code).To(Equal(http.StatusNotFound))
 		})
 
-		It("returns 404 for unknown path", func() {
+		It("returns 404 for unknown module", func() {
 			req := httptest.NewRequest("GET", "/tree/test/nonexistent", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
@@ -82,9 +125,9 @@ var _ = Describe("Handler", func() {
 		})
 	})
 
-	Describe("GET /detail/{collection}/{path...}", func() {
+	Describe("GET /detail/{collection}/{module}/{path...}", func() {
 		It("returns detail for a leaf node", func() {
-			req := httptest.NewRequest("GET", "/detail/test/interfaces/interface/mtu", nil)
+			req := httptest.NewRequest("GET", "/detail/test/test-module/interfaces/interface/mtu", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
 
@@ -97,7 +140,7 @@ var _ = Describe("Handler", func() {
 		})
 
 		It("returns detail for a container", func() {
-			req := httptest.NewRequest("GET", "/detail/test/interfaces", nil)
+			req := httptest.NewRequest("GET", "/detail/test/test-module/interfaces", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
 
@@ -108,7 +151,7 @@ var _ = Describe("Handler", func() {
 		})
 
 		It("returns 404 for unknown path", func() {
-			req := httptest.NewRequest("GET", "/detail/test/nonexistent", nil)
+			req := httptest.NewRequest("GET", "/detail/test/test-module/nonexistent", nil)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
 

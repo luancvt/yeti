@@ -31,14 +31,14 @@ var _ = Describe("ParseCollection", func() {
 
 	Describe("GetNode", func() {
 		It("returns a top-level container", func() {
-			node, err := tree.GetNode("/interfaces")
+			node, err := tree.GetNode("test-module","/interfaces")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(node.Kind).To(Equal(yeti.KindContainer))
 			Expect(node.Config).To(BeTrue())
 		})
 
 		It("returns a nested leaf with type info", func() {
-			node, err := tree.GetNode("/interfaces/interface/mtu")
+			node, err := tree.GetNode("test-module","/interfaces/interface/mtu")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(node.Kind).To(Equal(yeti.KindLeaf))
 			Expect(node.Type).NotTo(BeNil())
@@ -48,27 +48,27 @@ var _ = Describe("ParseCollection", func() {
 		})
 
 		It("marks state containers as config false", func() {
-			node, err := tree.GetNode("/interfaces/interface/counters")
+			node, err := tree.GetNode("test-module","/interfaces/interface/counters")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(node.Config).To(BeFalse())
 		})
 
 		It("returns a list node with its key", func() {
-			node, err := tree.GetNode("/interfaces/interface")
+			node, err := tree.GetNode("test-module","/interfaces/interface")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(node.Kind).To(Equal(yeti.KindList))
 			Expect(node.Key).To(Equal("name"))
 		})
 
 		It("returns an error for a nonexistent path", func() {
-			_, err := tree.GetNode("/nonexistent")
+			_, err := tree.GetNode("test-module","/nonexistent")
 			Expect(err).To(HaveOccurred())
 		})
 	})
 
 	Describe("GetChildren", func() {
 		It("returns the children of a list node", func() {
-			children, err := tree.GetChildren("/interfaces/interface")
+			children, err := tree.GetChildren("test-module","/interfaces/interface")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(children).To(HaveLen(4))
 
@@ -85,7 +85,7 @@ var _ = Describe("ParseCollection", func() {
 		})
 
 		It("returns nil for a leaf node", func() {
-			children, err := tree.GetChildren("/interfaces/interface/mtu")
+			children, err := tree.GetChildren("test-module","/interfaces/interface/mtu")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(children).To(BeNil())
 		})

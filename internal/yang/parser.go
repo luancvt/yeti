@@ -109,6 +109,32 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 	return tree, nil
 }
 
+// ModuleNames returns the sorted list of module names in this collection.
+func (ct *CollectionTree) ModuleNames() []string {
+	names := make([]string, 0, len(ct.modules))
+	for name := range ct.modules {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
+}
+
+// ModuleChildren returns the top-level nodes for a specific module.
+func (ct *CollectionTree) ModuleChildren(module string) ([]Node, error) {
+	entry, ok := ct.modules[module]
+	if !ok {
+		return nil, fmt.Errorf("module not found: %s", module)
+	}
+	if entry.Dir == nil {
+		return nil, nil
+	}
+	var nodes []Node
+	for _, child := range sortedEntries(entry.Dir) {
+		nodes = append(nodes, entryToNode(child, "/"+child.Name))
+	}
+	return nodes, nil
+}
+
 // Children returns the top-level nodes across all modules in the collection.
 func (ct *CollectionTree) Children() []Node {
 	var nodes []Node
@@ -126,9 +152,9 @@ func (ct *CollectionTree) Children() []Node {
 	return nodes
 }
 
-// GetNode returns the node at the given slash-separated path.
-func (ct *CollectionTree) GetNode(path string) (*Node, error) {
-	entry, err := ct.getEntry(path)
+// GetNode returns the node at the given slash-separated path, scoped to a module.
+func (ct *CollectionTree) GetNode(module, path string) (*Node, error) {
+	entry, err := ct.getEntry(module, path)
 	if err != nil {
 		return nil, err
 	}
@@ -136,9 +162,9 @@ func (ct *CollectionTree) GetNode(path string) (*Node, error) {
 	return &node, nil
 }
 
-// GetChildren returns the direct children of the node at the given path.
-func (ct *CollectionTree) GetChildren(path string) ([]Node, error) {
-	entry, err := ct.getEntry(path)
+// GetChildren returns the direct children of the node at the given path, scoped to a module.
+func (ct *CollectionTree) GetChildren(module, path string) ([]Node, error) {
+	entry, err := ct.getEntry(module, path)
 	if err != nil {
 		return nil, err
 	}
@@ -155,38 +181,52 @@ func (ct *CollectionTree) GetChildren(path string) ([]Node, error) {
 	return children, nil
 }
 
-func (ct *CollectionTree) getEntry(path string) (*gyang.Entry, error) {
+func (ct *CollectionTree) getEntry(module, path string) (*gyang.Entry, error) {
 	parts := strings.Split(strings.TrimPrefix(path, "/"), "/")
 	if len(parts) == 0 || parts[0] == "" {
 		return nil, fmt.Errorf("empty path")
 	}
 
-	var current *gyang.Entry
+	// Try the specified module first
+	if mod, ok := ct.modules[module]; ok && mod.Dir != nil {
+		if current, ok := mod.Dir[parts[0]]; ok {
+			if entry := walkPath(current, parts[1:]); entry != nil {
+				return entry, nil
+			}
+		}
+	}
+
+	// Fall back to searching all modules — handles augmented nodes
+	// from other modules that weren't merged during Process().
 	for _, mod := range ct.modules {
 		if mod.Dir == nil {
 			continue
 		}
-		if child, ok := mod.Dir[parts[0]]; ok {
-			current = child
-			break
+		current, ok := mod.Dir[parts[0]]
+		if !ok {
+			continue
+		}
+		if entry := walkPath(current, parts[1:]); entry != nil {
+			return entry, nil
 		}
 	}
-	if current == nil {
-		return nil, fmt.Errorf("node not found: %s", parts[0])
-	}
 
-	for _, part := range parts[1:] {
+	return nil, fmt.Errorf("node not found: %s", path)
+}
+
+func walkPath(entry *gyang.Entry, parts []string) *gyang.Entry {
+	current := entry
+	for _, part := range parts {
 		if current.Dir == nil {
-			return nil, fmt.Errorf("node %q has no children", current.Name)
+			return nil
 		}
 		child, ok := current.Dir[part]
 		if !ok {
-			return nil, fmt.Errorf("node not found: %s", part)
+			return nil
 		}
 		current = child
 	}
-
-	return current, nil
+	return current
 }
 
 func entryToNode(e *gyang.Entry, path string) Node {

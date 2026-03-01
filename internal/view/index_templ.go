@@ -8,9 +8,7 @@ package view
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/terjelafton/yeti/internal/yang"
-
-func Index(nodes []yang.Node, collection string) templ.Component {
+func Index(collections []string, activeCollection string, activeModule string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,17 +41,132 @@ func Index(nodes []yang.Node, collection string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex h-screen\"><div class=\"w-1/2 overflow-auto p-4 border-r border-border\"><h1 class=\"text-lg font-bold mb-4 text-heading\">YANG Tree</h1><ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\"><div class=\"flex items-center gap-4 px-4 py-2 bg-surface border-b border-border\"><span class=\"font-bold text-heading\">Yeti</span> <select id=\"collection-select\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" name=\"collection\" onchange=\"selectCollection(this.value)\"><option value=\"\" disabled")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for _, node := range nodes {
-				templ_7745c5c3_Err = TreeNode(node, collection).Render(ctx, templ_7745c5c3_Buffer)
+			if activeCollection == "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " selected")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</ul></div><div id=\"detail-panel\" class=\"w-1/2 overflow-auto p-4 bg-surface\"><p class=\"text-muted\">Select a node to view details.</p></div></div><script>\n\t\t\tfunction toggleChildren(btn) {\n\t\t\t\tvar ul = btn.closest('div').nextElementSibling;\n\t\t\t\tif (!btn.dataset.loaded) {\n\t\t\t\t\tbtn.dataset.loaded = 'true';\n\t\t\t\t\tbtn.textContent = '\\u25BC';\n\t\t\t\t\tul.classList.remove('hidden');\n\t\t\t\t} else {\n\t\t\t\t\tvar isHidden = ul.classList.toggle('hidden');\n\t\t\t\t\tbtn.textContent = isHidden ? '\\u25B6' : '\\u25BC';\n\t\t\t\t}\n\t\t\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">Collection...</option> ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, name := range collections {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<option value=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var3 string
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 16, Col: 26}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if name == activeCollection {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, " selected")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, ">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 16, Col: 74}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</option>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</select> ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if activeCollection != "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div id=\"model-picker\" hx-get=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var5 string
+				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("/models/" + activeCollection)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 22, Col: 44}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-trigger=\"load\" hx-swap=\"innerHTML\" data-active-module=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var6 string
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(activeModule)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 25, Col: 39}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\"></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"model-picker\"></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><div class=\"flex flex-1 overflow-hidden\"><div id=\"tree-panel\" class=\"w-1/2 overflow-auto p-4 border-r border-border\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if activeModule != "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div hx-get=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var7 string
+				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("/tree/" + activeCollection + "/" + activeModule)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 35, Col: 64}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" hx-trigger=\"load\" hx-swap=\"innerHTML\" hx-target=\"this\"></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<p class=\"text-muted\">Select a collection and model to browse.</p>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><div id=\"detail-panel\" class=\"w-1/2 overflow-auto p-4 bg-surface\"><p class=\"text-muted\">Select a node to view details.</p></div></div></div><script>\n\t\t\tfunction selectCollection(value) {\n\t\t\t\thtmx.ajax('GET', '/models/' + value, {target: '#model-picker', swap: 'innerHTML'});\n\t\t\t\tdocument.getElementById('tree-panel').innerHTML = '<p class=\"text-muted\">Select a model to browse.</p>';\n\t\t\t\tdocument.getElementById('detail-panel').innerHTML = '<p class=\"text-muted\">Select a node to view details.</p>';\n\t\t\t}\n\n\t\t\tfunction selectModule(collection, module) {\n\t\t\t\thistory.pushState(null, '', '/' + collection + '/' + module);\n\t\t\t\tfetch('/tree/' + collection + '/' + module)\n\t\t\t\t\t.then(function(r) { return r.text(); })\n\t\t\t\t\t.then(function(html) {\n\t\t\t\t\t\tvar panel = document.getElementById('tree-panel');\n\t\t\t\t\t\tpanel.innerHTML = html;\n\t\t\t\t\t\thtmx.process(panel);\n\t\t\t\t\t});\n\t\t\t\tdocument.getElementById('detail-panel').innerHTML = '<p class=\"text-muted\">Select a node to view details.</p>';\n\t\t\t}\n\n\t\t\tfunction toggleNode(btn) {\n\t\t\t\tvar ul = btn.closest('div').nextElementSibling;\n\t\t\t\tif (btn.dataset.loaded) {\n\t\t\t\t\tvar isHidden = ul.classList.toggle('hidden');\n\t\t\t\t\tbtn.textContent = isHidden ? '\\u25B6' : '\\u25BC';\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tbtn.dataset.loaded = 'true';\n\t\t\t\tbtn.textContent = '\\u23F3';\n\t\t\t\tfetch(btn.dataset.url)\n\t\t\t\t\t.then(function(r) { return r.text(); })\n\t\t\t\t\t.then(function(html) {\n\t\t\t\t\t\tul.innerHTML = html;\n\t\t\t\t\t\thtmx.process(ul);\n\t\t\t\t\t\tul.classList.remove('hidden');\n\t\t\t\t\t\tbtn.textContent = '\\u25BC';\n\t\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Pre-fill model picker input after it loads via HTMX\n\t\t\tdocument.addEventListener('htmx:afterSwap', function(e) {\n\t\t\t\tif (e.detail.target.id === 'model-picker') {\n\t\t\t\t\tvar activeModule = e.detail.target.dataset.activeModule;\n\t\t\t\t\tif (activeModule) {\n\t\t\t\t\t\tvar input = e.detail.target.querySelector('input');\n\t\t\t\t\t\tif (input) input.value = activeModule;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\n\t\t\tfunction filterModels(input) {\n\t\t\t\tvar filter = input.value.toLowerCase();\n\t\t\t\tvar items = input.parentElement.querySelectorAll('.model-item');\n\t\t\t\titems.forEach(function(item) {\n\t\t\t\t\tif (item.textContent.toLowerCase().includes(filter)) {\n\t\t\t\t\t\titem.style.display = '';\n\t\t\t\t\t} else {\n\t\t\t\t\t\titem.style.display = 'none';\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

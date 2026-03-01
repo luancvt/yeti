@@ -13,29 +13,38 @@ import (
 func main() {
 	modelsFS := os.DirFS("models")
 
-	collections := []struct{ name, path string }{
-		{"test", "test"},
-		{"xr-7112", "xr-7112"},
+	// Auto-discover collections from models/ directory
+	entries, err := os.ReadDir("models")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error reading models directory: %v\n", err)
+		os.Exit(1)
 	}
 
 	trees := make(map[string]*yang.CollectionTree)
-	for _, c := range collections {
-		log.Printf("Parsing collection %s...", c.name)
-		tree, err := yang.ParseCollection(modelsFS, c.path)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error parsing %s: %v\n", c.name, err)
-			os.Exit(1)
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
 		}
-		trees[c.name] = tree
-		log.Printf("  %d top-level nodes", len(tree.Children()))
+		name := e.Name()
+		log.Printf("Parsing collection %s...", name)
+		tree, err := yang.ParseCollection(modelsFS, name)
+		if err != nil {
+			log.Printf("  skipping %s: %v", name, err)
+			continue
+		}
+		trees[name] = tree
+		log.Printf("  %d modules", len(tree.ModuleNames()))
 	}
 
 	h := handler.New(trees)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", h.Index)
-	mux.HandleFunc("GET /tree/{collection}/{path...}", h.TreeChildren)
-	mux.HandleFunc("GET /detail/{collection}/{path...}", h.Detail)
+	mux.HandleFunc("GET /{$}", h.Index)
+	mux.HandleFunc("GET /{collection}/{module}", h.Browse)
+	mux.HandleFunc("GET /models/{collection}", h.Models)
+	mux.HandleFunc("GET /tree/{collection}/{module}", h.Tree)
+	mux.HandleFunc("GET /tree/{collection}/{module}/{path...}", h.Tree)
+	mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
 
 	log.Println("Yeti running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))

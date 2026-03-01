@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"sort"
 
 	"github.com/terjelafton/yeti/internal/view"
 	"github.com/terjelafton/yeti/internal/yang"
@@ -15,32 +16,80 @@ func New(trees map[string]*yang.CollectionTree) *Handler {
 	return &Handler{trees: trees}
 }
 
-func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	tree := h.trees["test"]
-	nodes := tree.Children()
-	view.Index(nodes, "test").Render(r.Context(), w)
+// CollectionNames returns sorted collection names.
+func (h *Handler) CollectionNames() []string {
+	names := make([]string, 0, len(h.trees))
+	for name := range h.trees {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
-func (h *Handler) TreeChildren(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
+	view.Index(h.CollectionNames(), "", "").Render(r.Context(), w)
+}
+
+func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
 	collection := r.PathValue("collection")
+	module := r.PathValue("module")
+
 	tree, ok := h.trees[collection]
 	if !ok {
 		http.NotFound(w, r)
 		return
 	}
 
-	path := "/" + r.PathValue("path")
-	children, err := tree.GetChildren(path)
+	// Verify the module exists
+	if _, err := tree.ModuleChildren(module); err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	view.Index(h.CollectionNames(), collection, module).Render(r.Context(), w)
+}
+
+func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
+	collection := r.PathValue("collection")
+	tree, ok := h.trees[collection]
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	view.ModelPicker(tree.ModuleNames(), collection).Render(r.Context(), w)
+}
+
+func (h *Handler) Tree(w http.ResponseWriter, r *http.Request) {
+	collection := r.PathValue("collection")
+	module := r.PathValue("module")
+	tree, ok := h.trees[collection]
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+
+	pathStr := r.PathValue("path")
+
+	var nodes []yang.Node
+	var err error
+	if pathStr == "" {
+		// No path — return module's top-level children
+		nodes, err = tree.ModuleChildren(module)
+	} else {
+		nodes, err = tree.GetChildren(module, "/"+pathStr)
+	}
+
 	if err != nil {
 		http.NotFound(w, r)
 		return
 	}
 
-	view.TreeNodeList(children, collection).Render(r.Context(), w)
+	view.TreeNodeList(nodes, collection, module).Render(r.Context(), w)
 }
 
 func (h *Handler) Detail(w http.ResponseWriter, r *http.Request) {
 	collection := r.PathValue("collection")
+	module := r.PathValue("module")
 	tree, ok := h.trees[collection]
 	if !ok {
 		http.NotFound(w, r)
@@ -48,7 +97,7 @@ func (h *Handler) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := "/" + r.PathValue("path")
-	node, err := tree.GetNode(path)
+	node, err := tree.GetNode(module, path)
 	if err != nil {
 		http.NotFound(w, r)
 		return

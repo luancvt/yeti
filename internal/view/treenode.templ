@@ -38,17 +38,14 @@ func isExpandable(k yang.NodeKind) bool {
 	return k == yang.KindContainer || k == yang.KindList
 }
 
-templ TreeNode(node yang.Node, collection string) {
+templ TreeNode(node yang.Node, collection string, module string) {
 	<li class="py-0.5">
 		<div class="flex items-center gap-1 group">
 			if isExpandable(node.Kind) {
 				<button
 					class="w-5 h-5 flex items-center justify-center text-xs text-muted hover:text-body cursor-pointer"
-					onclick="toggleChildren(this)"
-					hx-get={ "/tree/" + collection + node.Path }
-					hx-target="next ul"
-					hx-swap="innerHTML"
-					hx-trigger="click once"
+					onclick="toggleNode(this)"
+					data-url={ "/tree/" + collection + "/" + module + node.Path }
 				>
 					&#9654;
 				</button>
@@ -60,7 +57,7 @@ templ TreeNode(node yang.Node, collection string) {
 			</span>
 			<span
 				class="cursor-pointer hover:text-primary-hover hover:underline"
-				hx-get={ "/detail/" + collection + node.Path }
+				hx-get={ "/detail/" + collection + "/" + module + node.Path }
 				hx-target="#detail-panel"
 				hx-swap="innerHTML"
 			>
@@ -79,8 +76,8 @@ templ TreeNode(node yang.Node, collection string) {
 	</li>
 }
 
-templ TreeNodeList(nodes []yang.Node, collection string) {
+templ TreeNodeList(nodes []yang.Node, collection string, module string) {
 	for _, node := range nodes {
-		@TreeNode(node, collection)
+		@TreeNode(node, collection, module)
 	}
 }
