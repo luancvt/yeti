@@ -1,0 +1,22 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  # Run templ generate before building
+  pre_cmd = ["templ generate"]
+  cmd = "go build -o ./tmp/yeti ./cmd/yeti/"
+  bin = "./tmp/yeti"
+  # Watch these extensions
+  include_ext = ["go", "templ", "yang"]
+  # Ignore these directories
+  exclude_dir = ["tmp", "models", ".git", ".claude", "docs", "scripts"]
+  # Ignore generated templ files (pre_cmd produces these)
+  exclude_regex = ["_templ\\.go$"]
+  # Delay after a change before rebuilding (ms)
+  delay = 1000
+
+[log]
+  main_only = true
+
+[misc]
+  clean_on_exit = true
