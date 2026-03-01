@@ -1,0 +1,86 @@
+package view
+
+import (
+	"github.com/terjelafton/yeti/internal/yang"
+)
+
+func kindLabel(k yang.NodeKind) string {
+	switch k {
+	case yang.KindContainer:
+		return "ctr"
+	case yang.KindList:
+		return "list"
+	case yang.KindLeaf:
+		return "leaf"
+	case yang.KindLeafList:
+		return "lfls"
+	default:
+		return "?"
+	}
+}
+
+func kindColor(k yang.NodeKind) string {
+	switch k {
+	case yang.KindContainer:
+		return "bg-blue-100 text-blue-700"
+	case yang.KindList:
+		return "bg-purple-100 text-purple-700"
+	case yang.KindLeaf:
+		return "bg-green-100 text-green-700"
+	case yang.KindLeafList:
+		return "bg-teal-100 text-teal-700"
+	default:
+		return "bg-gray-100 text-gray-700"
+	}
+}
+
+func isExpandable(k yang.NodeKind) bool {
+	return k == yang.KindContainer || k == yang.KindList
+}
+
+templ TreeNode(node yang.Node, collection string) {
+	<li class="py-0.5">
+		<div class="flex items-center gap-1 group">
+			if isExpandable(node.Kind) {
+				<button
+					class="w-5 h-5 flex items-center justify-center text-xs text-gray-400 hover:text-gray-700 cursor-pointer"
+					onclick="toggleChildren(this)"
+					hx-get={ "/tree/" + collection + node.Path }
+					hx-target="next ul"
+					hx-swap="innerHTML"
+					hx-trigger="click once"
+				>
+					&#9654;
+				</button>
+			} else {
+				<span class="w-5 h-5"></span>
+			}
+			<span class={ "text-xs px-1 rounded font-mono " + kindColor(node.Kind) }>
+				{ kindLabel(node.Kind) }
+			</span>
+			<span
+				class="cursor-pointer hover:text-blue-600 hover:underline"
+				hx-get={ "/detail/" + collection + node.Path }
+				hx-target="#detail-panel"
+				hx-swap="innerHTML"
+			>
+				{ node.Name }
+			</span>
+			if node.Key != "" {
+				<span class="text-xs text-gray-400">[key: { node.Key }]</span>
+			}
+			if !node.Config {
+				<span class="text-xs text-orange-500">state</span>
+			}
+		</div>
+		if isExpandable(node.Kind) {
+			<ul class="hidden ml-5"></ul>
+		}
+	</li>
+}
+
+templ TreeNodeList(nodes []yang.Node, collection string) {
+	for _, node := range nodes {
+		@TreeNode(node, collection)
+	}
+}
