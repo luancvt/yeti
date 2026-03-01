@@ -9,11 +9,22 @@ import (
 	gyang "github.com/openconfig/goyang/pkg/yang"
 )
 
+// NodeKind represents the YANG schema node type.
+type NodeKind string
+
+const (
+	KindContainer NodeKind = "container"
+	KindList      NodeKind = "list"
+	KindLeaf      NodeKind = "leaf"
+	KindLeafList  NodeKind = "leaf-list"
+	KindModule    NodeKind = "module"
+)
+
 // Node represents a YANG tree node with the metadata we care about.
 type Node struct {
 	Name        string
 	Path        string
-	Kind        string // "container", "list", "leaf", "leaf-list", "module"
+	Kind        NodeKind
 	Description string
 	Config      bool   // true = config (rw), false = state (ro)
 	Mandatory   bool
@@ -193,18 +204,18 @@ func entryToNode(e *gyang.Entry, path string) Node {
 
 	switch {
 	case e.IsList():
-		n.Kind = "list"
+		n.Kind = KindList
 		n.Key = e.Key
 	case e.IsLeaf():
-		n.Kind = "leaf"
+		n.Kind = KindLeaf
 	case e.IsLeafList():
-		n.Kind = "leaf-list"
+		n.Kind = KindLeafList
 	case e.IsContainer():
-		n.Kind = "container"
+		n.Kind = KindContainer
 	case e.Dir != nil:
-		n.Kind = "container"
+		n.Kind = KindContainer
 	default:
-		n.Kind = "leaf"
+		n.Kind = KindLeaf
 	}
 
 	if e.Type != nil {
