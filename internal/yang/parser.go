@@ -58,17 +58,14 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 	ms := gyang.NewModules()
 
 	var yangFiles []string
-	err := fs.WalkDir(fsys, path, func(p string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !d.IsDir() && strings.HasSuffix(p, ".yang") {
-			yangFiles = append(yangFiles, p)
-		}
-		return nil
-	})
+	entries, err := fs.ReadDir(fsys, path)
 	if err != nil {
-		return nil, fmt.Errorf("walking %s: %w", path, err)
+		return nil, fmt.Errorf("reading %s: %w", path, err)
+	}
+	for _, e := range entries {
+		if !e.IsDir() && strings.HasSuffix(e.Name(), ".yang") {
+			yangFiles = append(yangFiles, path+"/"+e.Name())
+		}
 	}
 
 	if len(yangFiles) == 0 {

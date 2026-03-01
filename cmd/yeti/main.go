@@ -13,13 +13,23 @@ import (
 func main() {
 	modelsFS := os.DirFS("models")
 
-	tree, err := yang.ParseCollection(modelsFS, "test")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error parsing models: %v\n", err)
-		os.Exit(1)
+	collections := []struct{ name, path string }{
+		{"test", "test"},
+		{"xr-7112", "xr-7112"},
 	}
 
-	trees := map[string]*yang.CollectionTree{"test": tree}
+	trees := make(map[string]*yang.CollectionTree)
+	for _, c := range collections {
+		log.Printf("Parsing collection %s...", c.name)
+		tree, err := yang.ParseCollection(modelsFS, c.path)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error parsing %s: %v\n", c.name, err)
+			os.Exit(1)
+		}
+		trees[c.name] = tree
+		log.Printf("  %d top-level nodes", len(tree.Children()))
+	}
+
 	h := handler.New(trees)
 
 	mux := http.NewServeMux()
