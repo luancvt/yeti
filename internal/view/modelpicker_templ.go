@@ -29,17 +29,17 @@ func ModelPicker(modules []string, collection string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative\"><input type=\"text\" placeholder=\"Filter models...\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm w-64\" oninput=\"filterModels(this)\" onfocus=\"this.parentElement.querySelector('.model-list').classList.remove('hidden')\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative model-picker-wrapper\"><input type=\"text\" placeholder=\"Filter models...\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm w-64\" oninput=\"filterModels(this)\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(modules) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<ul class=\"model-list hidden absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<ul class=\"model-list absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, name := range modules {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" hx-get=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" onmousedown=\"event.preventDefault()\" hx-get=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -65,7 +65,7 @@ func ModelPicker(modules []string, collection string) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.relative').querySelector('input').value = this.textContent.trim(); this.closest('ul').classList.add('hidden')\" hx-on::after-settle=\"document.getElementById('detail-panel').innerHTML = '<p class=\\'text-muted\\'>Select a node to view details.</p>'\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()\" hx-on::after-settle=\"document.getElementById('detail-panel').innerHTML = '<p class=\\'text-muted\\'>Select a node to view details.</p>'\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
