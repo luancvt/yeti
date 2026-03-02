@@ -42,3 +42,10 @@
 
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
+
+@layer base {
+  * {
+    scrollbar-color: var(--color-border) transparent;
+    scrollbar-width: thin;
+  }
+}
