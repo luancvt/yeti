@@ -31,6 +31,8 @@ var _ = Describe("Handler", func() {
 		mux.HandleFunc("GET /tree/{collection}/{module}", h.Tree)
 		mux.HandleFunc("GET /tree/{collection}/{module}/{path...}", h.Tree)
 		mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
+		mux.HandleFunc("GET /empty/tree", h.EmptyTree)
+		mux.HandleFunc("GET /empty/detail", h.EmptyDetail)
 	})
 
 	Describe("GET /", func() {
@@ -123,6 +125,60 @@ var _ = Describe("Handler", func() {
 			mux.ServeHTTP(w, req)
 
 			Expect(w.Code).To(Equal(http.StatusNotFound))
+		})
+	})
+
+	Describe("GET /models (query param)", func() {
+		It("returns module names via collection query param", func() {
+			req := httptest.NewRequest("GET", "/models?collection=test", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusOK))
+			Expect(w.Body.String()).To(ContainSubstring("test-module"))
+		})
+
+		It("returns 404 for nonexistent collection query param", func() {
+			req := httptest.NewRequest("GET", "/models?collection=nonexistent", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusNotFound))
+		})
+	})
+
+	Describe("GET /empty/tree", func() {
+		It("returns 200 with empty state content", func() {
+			req := httptest.NewRequest("GET", "/empty/tree", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusOK))
+		})
+	})
+
+	Describe("GET /empty/detail", func() {
+		It("returns 200 with empty state content", func() {
+			req := httptest.NewRequest("GET", "/empty/detail", nil)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			Expect(w.Code).To(Equal(http.StatusOK))
+		})
+	})
+
+	Describe("CollectionNames", func() {
+		It("returns sorted collection names", func() {
+			modelsFS := os.DirFS("../../models")
+			tree, err := yang.ParseCollection(modelsFS, "test")
+			Expect(err).NotTo(HaveOccurred())
+
+			trees := map[string]*yang.CollectionTree{
+				"beta":  tree,
+				"alpha": tree,
+			}
+			h := handler.New(trees)
+			Expect(h.CollectionNames()).To(Equal([]string{"alpha", "beta"}))
 		})
 	})
 

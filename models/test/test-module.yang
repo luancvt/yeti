@@ -31,6 +31,43 @@ module test-module {
         description "Whether the interface is enabled.";
       }
 
+      leaf-list tags {
+        type string;
+        description "Tags associated with this interface.";
+      }
+
+      leaf speed {
+        type enumeration {
+          enum 10M;
+          enum 100M;
+          enum 1G;
+          enum 10G;
+        }
+        description "The speed of the interface.";
+      }
+
+      leaf intf-description {
+        type string {
+          pattern "[A-Za-z][A-Za-z0-9 ]*";
+        }
+        description "A human-readable description of the interface.";
+      }
+
+      leaf admin-status {
+        type enumeration {
+          enum up;
+          enum down;
+        }
+        mandatory true;
+        description "Administrative status of the interface.";
+      }
+
+      leaf bandwidth {
+        type uint64;
+        units "bps";
+        description "Configured bandwidth of the interface.";
+      }
+
       container counters {
         config false;
         description "Interface counters (state data).";
@@ -43,6 +80,20 @@ module test-module {
         leaf out-octets {
           type uint64;
           description "Total bytes transmitted.";
+        }
+
+        container error-counters {
+          description "Error counters nested inside counters.";
+
+          leaf in-errors {
+            type uint64;
+            description "Total input errors.";
+          }
+
+          leaf out-errors {
+            type uint64;
+            description "Total output errors.";
+          }
         }
       }
     }

@@ -1,0 +1,22 @@
+module test-aux {
+  namespace "urn:example:test-aux";
+  prefix ta;
+
+  description "A secondary YANG module for testing multi-module support.";
+
+  container system {
+    description "Top-level system container.";
+
+    leaf hostname {
+      type string;
+      description "The system hostname.";
+    }
+
+    leaf uptime {
+      type uint64;
+      units "seconds";
+      config false;
+      description "System uptime in seconds.";
+    }
+  }
+}
