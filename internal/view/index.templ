@@ -74,11 +74,15 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 				if (mod) { var i = e.detail.target.querySelector('input'); if (i) i.value = mod; }
 			});
 
-			function toggleNode(btn) {
-				if (!btn.dataset.loaded) return;
-				var ul = btn.closest('div').nextElementSibling;
+			function toggleRow(row, event) {
+				// Load detail view
+				if (row.dataset.detailUrl) {
+					htmx.ajax('GET', row.dataset.detailUrl, '#detail-panel');
+				}
+				// Toggle children (skip on first click — HTMX handles that)
+				if (!row.dataset.loaded) return;
+				var ul = row.nextElementSibling;
 				ul.classList.toggle('hidden');
-				btn.textContent = ul.classList.contains('hidden') ? '\u25B6' : '\u25BC';
 			}
 
 			function filterModels(input) {
