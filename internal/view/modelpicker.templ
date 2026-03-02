@@ -13,7 +13,7 @@ templ ModelPicker(modules []string, collection string) {
 			<ul class="model-list absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm">
 				for _, name := range modules {
 					<li
-						class="model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary"
+						class="model-item px-3 py-1 cursor-pointer text-body hover:bg-surface hover:text-primary"
 						@mousedown.prevent
 						hx-get={ "/tree/" + collection + "/" + name }
 						hx-target="#tree-panel"

@@ -80,7 +80,8 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 			return nil, fmt.Errorf("reading %s: %w", f, err)
 		}
 		if err := ms.Parse(string(data), f); err != nil {
-			return nil, fmt.Errorf("parsing %s: %w", f, err)
+			fmt.Fprintf(os.Stderr, "warning: %v\n", err)
+			continue
 		}
 	}
 

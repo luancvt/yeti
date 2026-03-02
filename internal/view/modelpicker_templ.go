@@ -39,7 +39,7 @@ func ModelPicker(modules []string, collection string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for _, name := range modules {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" @mousedown.prevent hx-get=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer text-body hover:bg-surface hover:text-primary\" @mousedown.prevent hx-get=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
