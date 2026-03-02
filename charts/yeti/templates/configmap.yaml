@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  config.yaml: |
+    collections:
+    {{- range .Values.collections }}
+      - name: {{ .name }}
+        display: {{ .display | quote }}
+        path: {{ .name }}
+    {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-init
+data:
+  init.sh: |
+    #!/bin/sh
+    set -e
+    echo "Cloning YangModels/yang (sparse)..."
+    git clone --depth 1 --filter=blob:none --sparse \
+      https://github.com/YangModels/yang.git /tmp/yang
+    cd /tmp/yang
+    git sparse-checkout set {{ range .Values.collections }}{{ .path }} {{ end }}
+    {{- range .Values.collections }}
+    echo "Copying {{ .path }} -> /data/models/{{ .name }}"
+    cp -r {{ .path }} /data/models/{{ .name }}
+    {{- end }}
+    echo "Init complete."

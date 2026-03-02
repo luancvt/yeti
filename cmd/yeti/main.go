@@ -7,38 +7,46 @@ import (
 	"os"
 	"strings"
 
+	"github.com/terjelafton/yeti/internal/config"
 	"github.com/terjelafton/yeti/internal/handler"
 	"github.com/terjelafton/yeti/internal/yang"
 	"github.com/terjelafton/yeti/static"
 )
 
 func main() {
-	modelsFS := os.DirFS("models")
+	configPath := envOr("YETI_CONFIG", "config.yaml")
+	modelsDir := envOr("YETI_MODELS_DIR", "models")
 
-	// Auto-discover collections from models/ directory
-	entries, err := os.ReadDir("models")
+	f, err := os.Open(configPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error reading models directory: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error opening config %s: %v\n", configPath, err)
+		os.Exit(1)
+	}
+	defer f.Close()
+
+	cfg, err := config.Load(f)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error loading config: %v\n", err)
 		os.Exit(1)
 	}
 
+	modelsFS := os.DirFS(modelsDir)
 	trees := make(map[string]*yang.CollectionTree)
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		name := e.Name()
-		log.Printf("Parsing collection %s...", name)
-		tree, err := yang.ParseCollection(modelsFS, name)
+	displayNames := make(map[string]string)
+
+	for _, c := range cfg.Collections {
+		log.Printf("Parsing collection %s...", c.Name)
+		tree, err := yang.ParseCollection(modelsFS, c.Path)
 		if err != nil {
-			log.Printf("  skipping %s: %v", name, err)
+			log.Printf("  skipping %s: %v", c.Name, err)
 			continue
 		}
-		trees[name] = tree
+		trees[c.Name] = tree
+		displayNames[c.Name] = c.Display
 		log.Printf("  %d modules", len(tree.ModuleNames()))
 	}
 
-	h := handler.New(trees)
+	h := handler.New(trees, displayNames)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", h.Index)
@@ -52,7 +60,7 @@ func main() {
 	mux.HandleFunc("GET /empty/detail", h.EmptyDetail)
 
 	staticHandler := http.StripPrefix("/static/", http.FileServerFS(static.FS))
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	httpHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/static/") {
 			staticHandler.ServeHTTP(w, r)
 			return
@@ -61,5 +69,12 @@ func main() {
 	})
 
 	log.Println("Yeti running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", handler))
+	log.Fatal(http.ListenAndServe(":8080", httpHandler))
+}
+
+func envOr(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
 }

@@ -1,6 +1,6 @@
 package view
 
-templ Index(collections []string, activeCollection string, activeModule string) {
+templ Index(collections []CollectionInfo, activeCollection string, activeModule string) {
 	@Layout("Yeti — YANG Entry Tree Inspector") {
 		<div
 			class="flex flex-col h-screen"
@@ -68,8 +68,8 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 							hx-on::after-settle="resetPanels()"
 						>
 							<option value="" disabled selected?={ activeCollection == "" }>Collection...</option>
-							for _, name := range collections {
-								<option value={ name } selected?={ name == activeCollection }>{ name }</option>
+							for _, c := range collections {
+								<option value={ c.Name } selected?={ c.Name == activeCollection }>{ c.Display }</option>
 							}
 						</select>
 						</label>

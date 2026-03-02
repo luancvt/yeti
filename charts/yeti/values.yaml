@@ -1,0 +1,14 @@
+image:
+  repository: yeti
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+collections: []
+# Example:
+#   - name: xr-7112
+#     display: "Cisco IOS-XR 7.11.2"
+#     path: vendor/cisco/xr/7112

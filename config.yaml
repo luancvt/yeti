@@ -1,0 +1,10 @@
+collections:
+  - name: xr-7112
+    display: "Cisco IOS-XR 7.11.2"
+    path: xr-7112
+  - name: xr-2442
+    display: "Cisco IOS-XR 24.4.2"
+    path: xr-2442
+  - name: test
+    display: "Test Collection"
+    path: test

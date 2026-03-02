@@ -23,10 +23,6 @@ func Load(r io.Reader) (*Config, error) {
 		return nil, fmt.Errorf("parsing config: %w", err)
 	}
 
-	if len(cfg.Collections) == 0 {
-		return nil, fmt.Errorf("config must have at least one collection")
-	}
-
 	for i, c := range cfg.Collections {
 		if c.Name == "" {
 			return nil, fmt.Errorf("collection %d: missing name", i)

@@ -21,7 +21,8 @@ var _ = Describe("Handler", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		trees := map[string]*yang.CollectionTree{"test": tree}
-		h := handler.New(trees)
+		displayNames := map[string]string{"test": "Test Collection"}
+		h := handler.New(trees, displayNames)
 
 		mux = http.NewServeMux()
 		mux.HandleFunc("GET /{$}", h.Index)
@@ -167,8 +168,8 @@ var _ = Describe("Handler", func() {
 		})
 	})
 
-	Describe("CollectionNames", func() {
-		It("returns sorted collection names", func() {
+	Describe("Collections", func() {
+		It("returns sorted collection info with display names", func() {
 			modelsFS := os.DirFS("../../models")
 			tree, err := yang.ParseCollection(modelsFS, "test")
 			Expect(err).NotTo(HaveOccurred())
@@ -177,8 +178,14 @@ var _ = Describe("Handler", func() {
 				"beta":  tree,
 				"alpha": tree,
 			}
-			h := handler.New(trees)
-			Expect(h.CollectionNames()).To(Equal([]string{"alpha", "beta"}))
+			dn := map[string]string{"alpha": "Alpha Display", "beta": "Beta Display"}
+			h := handler.New(trees, dn)
+			collections := h.Collections()
+			Expect(collections).To(HaveLen(2))
+			Expect(collections[0].Name).To(Equal("alpha"))
+			Expect(collections[0].Display).To(Equal("Alpha Display"))
+			Expect(collections[1].Name).To(Equal("beta"))
+			Expect(collections[1].Display).To(Equal("Beta Display"))
 		})
 	})
 

@@ -35,6 +35,11 @@ collections:
 		Entry("missing name", `collections: [{ display: "X", path: "x" }]`),
 		Entry("missing display", `collections: [{ name: "x", path: "x" }]`),
 		Entry("missing path", `collections: [{ name: "x", display: "X" }]`),
-		Entry("empty collections", `collections: []`),
 	)
+
+	It("accepts empty collections", func() {
+		cfg, err := config.Load(strings.NewReader(`collections: []`))
+		Expect(err).NotTo(HaveOccurred())
+		Expect(cfg.Collections).To(BeEmpty())
+	})
 })

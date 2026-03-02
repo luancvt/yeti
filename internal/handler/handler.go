@@ -9,25 +9,32 @@ import (
 )
 
 type Handler struct {
-	trees map[string]*yang.CollectionTree
+	trees        map[string]*yang.CollectionTree
+	displayNames map[string]string
 }
 
-func New(trees map[string]*yang.CollectionTree) *Handler {
-	return &Handler{trees: trees}
+func New(trees map[string]*yang.CollectionTree, displayNames map[string]string) *Handler {
+	return &Handler{trees: trees, displayNames: displayNames}
 }
 
-// CollectionNames returns sorted collection names.
-func (h *Handler) CollectionNames() []string {
-	names := make([]string, 0, len(h.trees))
+// Collections returns sorted collection info with display names.
+func (h *Handler) Collections() []view.CollectionInfo {
+	infos := make([]view.CollectionInfo, 0, len(h.trees))
 	for name := range h.trees {
-		names = append(names, name)
+		display := h.displayNames[name]
+		if display == "" {
+			display = name
+		}
+		infos = append(infos, view.CollectionInfo{Name: name, Display: display})
 	}
-	sort.Strings(names)
-	return names
+	sort.Slice(infos, func(i, j int) bool {
+		return infos[i].Name < infos[j].Name
+	})
+	return infos
 }
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	view.Index(h.CollectionNames(), "", "").Render(r.Context(), w)
+	view.Index(h.Collections(), "", "").Render(r.Context(), w)
 }
 
 func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +53,7 @@ func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view.Index(h.CollectionNames(), collection, module).Render(r.Context(), w)
+	view.Index(h.Collections(), collection, module).Render(r.Context(), w)
 }
 
 func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {

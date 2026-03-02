@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: fetch-models
+          image: alpine/git:latest
+          command: ["sh", "/scripts/init.sh"]
+          volumeMounts:
+            - name: models
+              mountPath: /data/models
+            - name: init-scripts
+              mountPath: /scripts
+      containers:
+        - name: yeti
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: YETI_MODELS_DIR
+              value: /data/models
+            - name: YETI_CONFIG
+              value: /etc/yeti/config.yaml
+          volumeMounts:
+            - name: models
+              mountPath: /data/models
+            - name: config
+              mountPath: /etc/yeti
+      volumes:
+        - name: models
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+        - name: init-scripts
+          configMap:
+            name: {{ .Release.Name }}-init
