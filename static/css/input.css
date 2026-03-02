@@ -49,3 +49,16 @@
     scrollbar-width: thin;
   }
 }
+
+@layer components {
+  #detail-panel > *,
+  #tree-panel > *,
+  #tree-panel ul > li {
+    animation: htmx-fade-in 150ms ease-out;
+  }
+
+  @keyframes htmx-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
