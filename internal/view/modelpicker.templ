@@ -19,7 +19,7 @@ templ ModelPicker(modules []string, collection string) {
 						hx-swap="innerHTML"
 						hx-push-url={ "/" + collection + "/" + name }
 						hx-on::before-request="this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()"
-						hx-on::after-settle="document.getElementById('detail-panel').innerHTML = '<p class=\'text-muted\'>Select a node to view details.</p>'"
+						hx-on::after-settle="document.getElementById('detail-panel').innerHTML = emptyDetail"
 					>
 						{ name }
 					</li>

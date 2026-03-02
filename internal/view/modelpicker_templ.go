@@ -65,7 +65,7 @@ func ModelPicker(modules []string, collection string) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()\" hx-on::after-settle=\"document.getElementById('detail-panel').innerHTML = '<p class=\\'text-muted\\'>Select a node to view details.</p>'\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()\" hx-on::after-settle=\"document.getElementById('detail-panel').innerHTML = emptyDetail\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
