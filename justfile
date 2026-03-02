@@ -10,14 +10,17 @@ generate:
 run: generate
     go run ./cmd/yeti/
 
-# Build the app
+# Verify the app compiles
 build: generate
-    go build -o yeti ./cmd/yeti/
-    just clean
+    go build -o /dev/null ./cmd/yeti/
 
-# Clean build artifacts
-clean:
-    rm -f yeti
+# Run tests
+test:
+    go test ./...
+
+# Check generated templ files are up to date
+check:
+    templ generate --check
 
 # Download YANG models from YangModels/yang repo
 # Usage: just fetch-models xr-7112 vendor/cisco/xr/7112
