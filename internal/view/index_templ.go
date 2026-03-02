@@ -41,7 +41,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\"><div class=\"flex items-center gap-4 px-4 py-2 bg-surface border-b border-border\"><span class=\"font-bold text-heading\">Yeti</span> <select name=\"collection\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" hx-get=\"/models\" hx-include=\"this\" hx-target=\"#model-picker\" hx-swap=\"innerHTML\" hx-trigger=\"change\" hx-on::after-settle=\"document.getElementById('tree-panel').innerHTML = '<p class=\\'text-muted\\'>Select a model to browse.</p>'; document.getElementById('detail-panel').innerHTML = '<p class=\\'text-muted\\'>Select a node to view details.</p>'\"><option value=\"\" disabled")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\"><div class=\"flex items-center gap-2 px-4 py-3 bg-surface border-b border-border\"><span class=\"text-lg font-bold text-heading tracking-wide\">Yeti</span> <span class=\"text-xs text-muted\">YANG Entry Tree Inspector</span></div><div class=\"flex flex-1 overflow-hidden\"><div class=\"w-1/2 flex flex-col border-r border-border\"><div class=\"flex items-center gap-3 px-4 py-2 bg-surface border-b border-border\"><select name=\"collection\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" hx-get=\"/models\" hx-include=\"this\" hx-target=\"#model-picker\" hx-swap=\"innerHTML\" hx-trigger=\"change\" hx-on::after-settle=\"document.getElementById('tree-panel').innerHTML = '<p class=\\'text-muted\\'>Select a model to browse.</p>'; document.getElementById('detail-panel').innerHTML = '<p class=\\'text-muted\\'>Select a node to view details.</p>'\"><option value=\"\" disabled")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -63,7 +63,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 20, Col: 26}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 25, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -86,7 +86,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 20, Col: 74}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 25, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -109,7 +109,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("/models?collection=" + activeCollection)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 26, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 31, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -122,7 +122,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(activeModule)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 29, Col: 39}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 34, Col: 41}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><div class=\"flex flex-1 overflow-hidden\"><div id=\"tree-panel\" class=\"w-1/2 overflow-auto p-4 border-r border-border\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><div id=\"tree-panel\" class=\"flex-1 overflow-auto p-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -150,7 +150,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("/tree/" + activeCollection + "/" + activeModule)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 39, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 43, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -166,13 +166,13 @@ func Index(collections []string, activeCollection string, activeModule string) t
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><div id=\"detail-panel\" class=\"w-1/2 overflow-auto p-4 bg-surface\"><p class=\"text-muted\">Select a node to view details.</p></div></div></div><script>\n\t\t\tdocument.body.addEventListener('htmx:afterSwap', function(e) {\n\t\t\t\tvar mod = e.detail.target.dataset && e.detail.target.dataset.activeModule;\n\t\t\t\tif (mod) { var i = e.detail.target.querySelector('input'); if (i) i.value = mod; }\n\t\t\t});\n\n\t\t\tfunction toggleNode(btn) {\n\t\t\t\tif (!btn.dataset.loaded) return;\n\t\t\t\tvar ul = btn.closest('div').nextElementSibling;\n\t\t\t\tul.classList.toggle('hidden');\n\t\t\t\tbtn.textContent = ul.classList.contains('hidden') ? '\\u25B6' : '\\u25BC';\n\t\t\t}\n\n\t\t\tfunction filterModels(input) {\n\t\t\t\tvar filter = input.value.toLowerCase();\n\t\t\t\tinput.parentElement.querySelectorAll('.model-item').forEach(function(item) {\n\t\t\t\t\titem.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';\n\t\t\t\t});\n\t\t\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div><div id=\"detail-panel\" class=\"w-1/2 overflow-auto p-4 bg-surface\"><p class=\"text-muted\">Select a node to view details.</p></div></div></div><script>\n\t\t\tdocument.body.addEventListener('htmx:afterSwap', function(e) {\n\t\t\t\tvar mod = e.detail.target.dataset && e.detail.target.dataset.activeModule;\n\t\t\t\tif (mod) { var i = e.detail.target.querySelector('input'); if (i) i.value = mod; }\n\t\t\t});\n\n\t\t\tfunction toggleNode(btn) {\n\t\t\t\tif (!btn.dataset.loaded) return;\n\t\t\t\tvar ul = btn.closest('div').nextElementSibling;\n\t\t\t\tul.classList.toggle('hidden');\n\t\t\t\tbtn.textContent = ul.classList.contains('hidden') ? '\\u25B6' : '\\u25BC';\n\t\t\t}\n\n\t\t\tfunction filterModels(input) {\n\t\t\t\tvar filter = input.value.toLowerCase();\n\t\t\t\tinput.parentElement.querySelectorAll('.model-item').forEach(function(item) {\n\t\t\t\t\titem.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';\n\t\t\t\t});\n\t\t\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Layout("Yeti — YANG Explorer").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Layout("Yeti — YANG Entry Tree Inspector").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
