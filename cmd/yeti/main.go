@@ -58,6 +58,9 @@ func main() {
 	mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
 	mux.HandleFunc("GET /empty/tree", h.EmptyTree)
 	mux.HandleFunc("GET /empty/detail", h.EmptyDetail)
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 
 	staticHandler := http.StripPrefix("/static/", http.FileServerFS(static.FS))
 	httpHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
