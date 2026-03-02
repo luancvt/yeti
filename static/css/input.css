@@ -90,6 +90,15 @@
     border-top: 1px solid var(--color-border);
   }
 
+  .tree-row.htmx-request {
+    animation: pulse 0.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
   .tree-node-link.selected {
     color: var(--color-primary);
     font-weight: 600;
