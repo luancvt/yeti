@@ -6,13 +6,6 @@ templ Index(collections []CollectionInfo, activeCollection string, activeModule 
 			class="flex flex-col h-screen"
 			x-data="{
 				dragging: false,
-				resetPanels() {
-					htmx.ajax('GET', '/empty/tree', '#tree-panel');
-					htmx.ajax('GET', '/empty/detail', '#detail-panel');
-				},
-				resetDetail() {
-					htmx.ajax('GET', '/empty/detail', '#detail-panel');
-				},
 				selectNode(el) {
 					let prev = document.querySelector('.tree-node-link.selected');
 					if (prev) prev.classList.remove('selected');
@@ -60,12 +53,11 @@ templ Index(collections []CollectionInfo, activeCollection string, activeModule 
 						<select
 							name="collection"
 							class="bg-raised text-body border border-border rounded px-2 py-1 text-sm"
-							hx-get="/models"
+							hx-get="/models?reset=true"
 							hx-include="this"
 							hx-target="#model-picker"
 							hx-swap="innerHTML"
 							hx-trigger="change"
-							hx-on::after-settle="resetPanels()"
 						>
 							<option value="" disabled selected?={ activeCollection == "" }>Collection...</option>
 							for _, c := range collections {

@@ -101,3 +101,10 @@ templ TreeNodeList(nodes []yang.Node, collection string, module string) {
 		@TreeNode(node, collection, module)
 	}
 }
+
+templ TreeNodeListWithReset(nodes []yang.Node, collection string, module string) {
+	@TreeNodeList(nodes, collection, module)
+	<div id="detail-panel" hx-swap-oob="innerHTML">
+		@EmptyDetail()
+	</div>
+}

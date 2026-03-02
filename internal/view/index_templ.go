@@ -41,7 +41,7 @@ func Index(collections []CollectionInfo, activeCollection string, activeModule s
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\" x-data=\"{\n\t\t\t\tdragging: false,\n\t\t\t\tresetPanels() {\n\t\t\t\t\thtmx.ajax('GET', '/empty/tree', '#tree-panel');\n\t\t\t\t\thtmx.ajax('GET', '/empty/detail', '#detail-panel');\n\t\t\t\t},\n\t\t\t\tresetDetail() {\n\t\t\t\t\thtmx.ajax('GET', '/empty/detail', '#detail-panel');\n\t\t\t\t},\n\t\t\t\tselectNode(el) {\n\t\t\t\t\tlet prev = document.querySelector('.tree-node-link.selected');\n\t\t\t\t\tif (prev) prev.classList.remove('selected');\n\t\t\t\t\tel.classList.add('selected');\n\t\t\t\t},\n\t\t\t\ttoggleRow(row) {\n\t\t\t\t\tlet link = row.querySelector('.tree-node-link');\n\t\t\t\t\tif (link) this.selectNode(link);\n\t\t\t\t\tif (row.dataset.detailUrl) htmx.ajax('GET', row.dataset.detailUrl, '#detail-panel');\n\t\t\t\t\tif (!row.dataset.loaded) return;\n\t\t\t\t\trow.nextElementSibling.classList.toggle('hidden');\n\t\t\t\t},\n\t\t\t\tfilterModels(input) {\n\t\t\t\t\tlet filter = input.value.toLowerCase();\n\t\t\t\t\tinput.parentElement.querySelectorAll('.model-item').forEach(item => {\n\t\t\t\t\t\titem.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t\tstartDrag(e) {\n\t\t\t\t\tthis.dragging = true;\n\t\t\t\t\te.target.setPointerCapture(e.pointerId);\n\t\t\t\t},\n\t\t\t\tonDrag(e) {\n\t\t\t\t\tif (!this.dragging) return;\n\t\t\t\t\tlet rect = $refs.splitContainer.getBoundingClientRect();\n\t\t\t\t\tlet pct = Math.max(15, Math.min(85, ((e.clientX - rect.left) / rect.width) * 100));\n\t\t\t\t\t$refs.treeWrapper.style.flexBasis = pct + '%';\n\t\t\t\t},\n\t\t\t\tstopDrag() { this.dragging = false; }\n\t\t\t}\" @htmx:after-swap.window=\"let mod = $event.detail.target.dataset?.activeModule; if (mod) { let i = $event.detail.target.querySelector('input'); if (i) i.value = mod; }\" :class=\"{ 'cursor-col-resize select-none': dragging }\" @pointermove.window=\"onDrag($event)\" @pointerup.window=\"stopDrag()\"><div class=\"flex items-center gap-2 px-4 py-3 bg-surface border-b border-border\"><span class=\"text-lg font-bold text-heading tracking-wide\">Yeti</span> <span class=\"text-xs text-muted\">YANG Entry Tree Inspector</span></div><div x-ref=\"splitContainer\" class=\"flex flex-1 overflow-hidden\"><div x-ref=\"treeWrapper\" class=\"flex flex-col border-r border-border\" style=\"flex-basis:50%;min-width:200px;flex-shrink:0\"><div class=\"flex items-center gap-3 px-4 py-2 bg-surface border-b border-border\"><label class=\"flex items-center gap-1.5 text-xs text-muted\">Collection <select name=\"collection\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" hx-get=\"/models\" hx-include=\"this\" hx-target=\"#model-picker\" hx-swap=\"innerHTML\" hx-trigger=\"change\" hx-on::after-settle=\"resetPanels()\"><option value=\"\" disabled")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\" x-data=\"{\n\t\t\t\tdragging: false,\n\t\t\t\tselectNode(el) {\n\t\t\t\t\tlet prev = document.querySelector('.tree-node-link.selected');\n\t\t\t\t\tif (prev) prev.classList.remove('selected');\n\t\t\t\t\tel.classList.add('selected');\n\t\t\t\t},\n\t\t\t\ttoggleRow(row) {\n\t\t\t\t\tlet link = row.querySelector('.tree-node-link');\n\t\t\t\t\tif (link) this.selectNode(link);\n\t\t\t\t\tif (row.dataset.detailUrl) htmx.ajax('GET', row.dataset.detailUrl, '#detail-panel');\n\t\t\t\t\tif (!row.dataset.loaded) return;\n\t\t\t\t\trow.nextElementSibling.classList.toggle('hidden');\n\t\t\t\t},\n\t\t\t\tfilterModels(input) {\n\t\t\t\t\tlet filter = input.value.toLowerCase();\n\t\t\t\t\tinput.parentElement.querySelectorAll('.model-item').forEach(item => {\n\t\t\t\t\t\titem.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t\tstartDrag(e) {\n\t\t\t\t\tthis.dragging = true;\n\t\t\t\t\te.target.setPointerCapture(e.pointerId);\n\t\t\t\t},\n\t\t\t\tonDrag(e) {\n\t\t\t\t\tif (!this.dragging) return;\n\t\t\t\t\tlet rect = $refs.splitContainer.getBoundingClientRect();\n\t\t\t\t\tlet pct = Math.max(15, Math.min(85, ((e.clientX - rect.left) / rect.width) * 100));\n\t\t\t\t\t$refs.treeWrapper.style.flexBasis = pct + '%';\n\t\t\t\t},\n\t\t\t\tstopDrag() { this.dragging = false; }\n\t\t\t}\" @htmx:after-swap.window=\"let mod = $event.detail.target.dataset?.activeModule; if (mod) { let i = $event.detail.target.querySelector('input'); if (i) i.value = mod; }\" :class=\"{ 'cursor-col-resize select-none': dragging }\" @pointermove.window=\"onDrag($event)\" @pointerup.window=\"stopDrag()\"><div class=\"flex items-center gap-2 px-4 py-3 bg-surface border-b border-border\"><span class=\"text-lg font-bold text-heading tracking-wide\">Yeti</span> <span class=\"text-xs text-muted\">YANG Entry Tree Inspector</span></div><div x-ref=\"splitContainer\" class=\"flex flex-1 overflow-hidden\"><div x-ref=\"treeWrapper\" class=\"flex flex-col border-r border-border\" style=\"flex-basis:50%;min-width:200px;flex-shrink:0\"><div class=\"flex items-center gap-3 px-4 py-2 bg-surface border-b border-border\"><label class=\"flex items-center gap-1.5 text-xs text-muted\">Collection <select name=\"collection\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" hx-get=\"/models?reset=true\" hx-include=\"this\" hx-target=\"#model-picker\" hx-swap=\"innerHTML\" hx-trigger=\"change\"><option value=\"\" disabled")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -63,7 +63,7 @@ func Index(collections []CollectionInfo, activeCollection string, activeModule s
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(c.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 72, Col: 30}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 64, Col: 30}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -86,7 +86,7 @@ func Index(collections []CollectionInfo, activeCollection string, activeModule s
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(c.Display)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 72, Col: 85}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 64, Col: 85}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -109,7 +109,7 @@ func Index(collections []CollectionInfo, activeCollection string, activeModule s
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("/models?collection=" + activeCollection)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 79, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 71, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -122,7 +122,7 @@ func Index(collections []CollectionInfo, activeCollection string, activeModule s
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(activeModule)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 82, Col: 41}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 74, Col: 41}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -150,7 +150,7 @@ func Index(collections []CollectionInfo, activeCollection string, activeModule s
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("/tree/" + activeCollection + "/" + activeModule)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 91, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 83, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {

@@ -1,5 +1,15 @@
 package view
 
+templ ModelPickerWithReset(modules []string, collection string) {
+	@ModelPicker(modules, collection)
+	<div id="tree-panel" hx-swap-oob="innerHTML">
+		@EmptyTree()
+	</div>
+	<div id="detail-panel" hx-swap-oob="innerHTML">
+		@EmptyDetail()
+	</div>
+}
+
 templ ModelPicker(modules []string, collection string) {
 	<label class="flex items-center gap-1.5 text-xs text-muted relative model-picker-wrapper">
 		Model
@@ -20,7 +30,6 @@ templ ModelPicker(modules []string, collection string) {
 						hx-swap="innerHTML"
 						hx-push-url={ "/" + collection + "/" + name }
 						hx-on::before-request="this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()"
-						hx-on::after-settle="resetDetail()"
 					>
 						{ name }
 					</li>

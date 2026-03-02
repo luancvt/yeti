@@ -66,7 +66,11 @@ func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	view.ModelPicker(tree.ModuleNames(), collection).Render(r.Context(), w)
+	if r.FormValue("reset") == "true" {
+		view.ModelPickerWithReset(tree.ModuleNames(), collection).Render(r.Context(), w)
+	} else {
+		view.ModelPicker(tree.ModuleNames(), collection).Render(r.Context(), w)
+	}
 }
 
 func (h *Handler) Tree(w http.ResponseWriter, r *http.Request) {
@@ -94,7 +98,11 @@ func (h *Handler) Tree(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view.TreeNodeList(nodes, collection, module).Render(r.Context(), w)
+	if pathStr == "" {
+		view.TreeNodeListWithReset(nodes, collection, module).Render(r.Context(), w)
+	} else {
+		view.TreeNodeList(nodes, collection, module).Render(r.Context(), w)
+	}
 }
 
 func (h *Handler) Detail(w http.ResponseWriter, r *http.Request) {
