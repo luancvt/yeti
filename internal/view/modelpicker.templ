@@ -1,7 +1,8 @@
 package view
 
 templ ModelPicker(modules []string, collection string) {
-	<div class="relative model-picker-wrapper">
+	<label class="flex items-center gap-1.5 text-xs text-muted relative model-picker-wrapper">
+		Model
 		<input
 			type="text"
 			placeholder="Filter models..."
@@ -26,5 +27,5 @@ templ ModelPicker(modules []string, collection string) {
 				}
 			</ul>
 		}
-	</div>
+	</label>
 }

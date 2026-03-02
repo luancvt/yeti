@@ -55,6 +55,8 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 			<div x-ref="splitContainer" class="flex flex-1 overflow-hidden">
 				<div x-ref="treeWrapper" class="flex flex-col border-r border-border" style="flex-basis:50%;min-width:200px;flex-shrink:0">
 					<div class="flex items-center gap-3 px-4 py-2 bg-surface border-b border-border">
+						<label class="flex items-center gap-1.5 text-xs text-muted">
+							Collection
 						<select
 							name="collection"
 							class="bg-raised text-body border border-border rounded px-2 py-1 text-sm"
@@ -70,6 +72,7 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 								<option value={ name } selected?={ name == activeCollection }>{ name }</option>
 							}
 						</select>
+						</label>
 						if activeCollection != "" {
 							<div
 								id="model-picker"
