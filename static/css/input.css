@@ -90,6 +90,11 @@
     border-top: 1px solid var(--color-border);
   }
 
+  .tree-node-link.selected {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
   .tree-children > li:last-child::after {
     content: '';
     position: absolute;

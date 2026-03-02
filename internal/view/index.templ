@@ -74,7 +74,16 @@ templ Index(collections []string, activeCollection string, activeModule string) 
 				if (mod) { var i = e.detail.target.querySelector('input'); if (i) i.value = mod; }
 			});
 
+			function selectNode(el) {
+				var prev = document.querySelector('.tree-node-link.selected');
+				if (prev) prev.classList.remove('selected');
+				el.classList.add('selected');
+			}
+
 			function toggleRow(row, event) {
+				// Highlight the node
+				var link = row.querySelector('.tree-node-link');
+				if (link) selectNode(link);
 				// Load detail view
 				if (row.dataset.detailUrl) {
 					htmx.ajax('GET', row.dataset.detailUrl, '#detail-panel');
