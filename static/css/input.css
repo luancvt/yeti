@@ -99,6 +99,22 @@
     50% { opacity: 0.4; }
   }
 
+  .split-handle {
+    width: 0;
+    padding: 0 4px;
+    margin-left: -4px;
+    margin-right: -4px;
+    cursor: col-resize;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .split-handle:hover {
+    background: var(--color-primary);
+    opacity: 0.3;
+  }
+
   .tree-node-link.selected {
     color: var(--color-primary);
     font-weight: 600;
