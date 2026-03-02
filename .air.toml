@@ -3,15 +3,15 @@ tmp_dir = "tmp"
 
 [build]
   # Run templ generate before building
-  pre_cmd = ["templ generate"]
+  pre_cmd = ["templ generate", "tailwindcss -i static/css/input.css -o static/css/tailwind.css --minified"]
   cmd = "go build -o ./tmp/yeti ./cmd/yeti/"
   bin = "./tmp/yeti"
   # Watch these extensions
-  include_ext = ["go", "templ", "yang"]
+  include_ext = ["go", "templ", "yang", "css"]
   # Ignore these directories
   exclude_dir = ["tmp", "models", ".git", ".claude", "docs", "scripts"]
-  # Ignore generated templ files (pre_cmd produces these)
-  exclude_regex = ["_templ\\.go$"]
+  # Ignore generated files (templ and tailwind output)
+  exclude_regex = ["_templ\\.go$", "tailwind\\.css$"]
   # Delay after a change before rebuilding (ms)
   delay = 1000
 

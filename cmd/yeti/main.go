@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/terjelafton/yeti/internal/handler"
 	"github.com/terjelafton/yeti/internal/yang"
+	"github.com/terjelafton/yeti/static"
 )
 
 func main() {
@@ -47,6 +49,15 @@ func main() {
 	mux.HandleFunc("GET /tree/{collection}/{module}/{path...}", h.Tree)
 	mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
 
+	staticHandler := http.StripPrefix("/static/", http.FileServerFS(static.FS))
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/static/") {
+			staticHandler.ServeHTTP(w, r)
+			return
+		}
+		mux.ServeHTTP(w, r)
+	})
+
 	log.Println("Yeti running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }

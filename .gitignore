@@ -2,3 +2,4 @@
 docs/plans
 /yeti
 tmp/
+static/css/tailwind.css

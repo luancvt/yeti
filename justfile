@@ -1,4 +1,4 @@
-# Run with live-reload (watches .go, .templ, .yang files)
+# Run with live-reload (watches .go, .templ, .yang, .css files)
 dev:
     air
 
@@ -6,12 +6,16 @@ dev:
 generate:
     templ generate
 
+# Build Tailwind CSS
+css:
+    tailwindcss -i static/css/input.css -o static/css/tailwind.css --minified
+
 # Run the app
-run: generate
+run: generate css
     go run ./cmd/yeti/
 
 # Verify the app compiles
-build: generate
+build: generate css
     go build -o /dev/null ./cmd/yeti/
 
 # Run tests
