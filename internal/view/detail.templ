@@ -1,8 +1,27 @@
 package view
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/terjelafton/yeti/internal/yang"
 )
+
+func sortedExtraKeys(m map[string][]string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func titleCase(s string) string {
+	if s == "" {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
+}
 
 templ Detail(node *yang.Node) {
 	<div>
@@ -66,6 +85,20 @@ templ Detail(node *yang.Node) {
 					<dd class="font-mono">
 						for _, v := range node.Type.EnumValues {
 							<span class="inline-block bg-raised rounded px-1 mr-1 mb-1">{ v }</span>
+						}
+					</dd>
+				}
+			}
+			if len(node.Extra) > 0 {
+				for _, key := range sortedExtraKeys(node.Extra) {
+					<dt class="font-semibold text-muted">{ titleCase(key) }</dt>
+					<dd class="font-mono">
+						if len(node.Extra[key]) == 1 {
+							{ node.Extra[key][0] }
+						} else {
+							for _, v := range node.Extra[key] {
+								<div>{ v }</div>
+							}
 						}
 					</dd>
 				}

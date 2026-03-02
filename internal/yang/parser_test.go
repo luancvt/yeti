@@ -40,8 +40,9 @@ var _ = Describe("ParseCollection", func() {
 		It("returns only the specified module's top-level nodes", func() {
 			children, err := tree.ModuleChildren("test-module")
 			Expect(err).NotTo(HaveOccurred())
-			Expect(children).To(HaveLen(1))
-			Expect(children[0].Name).To(Equal("interfaces"))
+			Expect(children).To(HaveLen(2))
+			names := []string{children[0].Name, children[1].Name}
+			Expect(names).To(ConsistOf("interfaces", "logging"))
 		})
 
 		It("returns the aux module's top-level nodes", func() {
@@ -122,6 +123,14 @@ var _ = Describe("ParseCollection", func() {
 			Expect(node.Kind).To(Equal(yeti.KindLeaf))
 			Expect(node.Type).NotTo(BeNil())
 			Expect(node.Type.Name).To(Equal("uint64"))
+		})
+
+		It("extracts Extra fields from a presence container", func() {
+			node, err := tree.GetNode("test-module", "/logging")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(node.Kind).To(Equal(yeti.KindContainer))
+			Expect(node.Extra).NotTo(BeNil())
+			Expect(node.Extra["presence"]).To(ConsistOf("Enables logging"))
 		})
 
 		It("returns an error for a nonexistent path", func() {

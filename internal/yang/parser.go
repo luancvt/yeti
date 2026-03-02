@@ -33,6 +33,7 @@ type Node struct {
 	Units       string
 	Key         string // list key, empty for non-lists
 	Type        *TypeInfo
+	Extra       map[string][]string // YANG metadata (presence, when, must …)
 	Children    []*Node
 }
 
@@ -261,6 +262,26 @@ func entryToNode(e *gyang.Entry, path string) Node {
 
 	if e.Type != nil {
 		n.Type = extractTypeInfo(e.Type)
+	}
+
+	if len(e.Extra) > 0 {
+		extra := make(map[string][]string, len(e.Extra))
+		for key, vals := range e.Extra {
+			strs := make([]string, 0, len(vals))
+			for _, v := range vals {
+				if yv, ok := v.(*gyang.Value); ok {
+					strs = append(strs, yv.Name)
+				} else {
+					strs = append(strs, fmt.Sprintf("%v", v))
+				}
+			}
+			if len(strs) > 0 {
+				extra[key] = strs
+			}
+		}
+		if len(extra) > 0 {
+			n.Extra = extra
+		}
 	}
 
 	return n

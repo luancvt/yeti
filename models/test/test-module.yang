@@ -4,6 +4,11 @@ module test-module {
 
   description "A minimal YANG module for testing Yeti.";
 
+  container logging {
+    presence "Enables logging";
+    description "Logging configuration; presence enables the feature.";
+  }
+
   container interfaces {
     description "Top-level container for interfaces.";
     config true;

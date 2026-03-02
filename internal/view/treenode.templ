@@ -60,6 +60,9 @@ templ TreeNode(node yang.Node, collection string, module string) {
 				if node.Key != "" {
 					<span class="text-xs text-muted">[key: { node.Key }]</span>
 				}
+				if len(node.Extra["presence"]) > 0 {
+					<span class="text-xs text-muted">[presence]</span>
+				}
 				if !node.Config {
 					<span class="text-xs text-warn">state</span>
 				}
@@ -81,6 +84,9 @@ templ TreeNode(node yang.Node, collection string, module string) {
 				</span>
 				if node.Key != "" {
 					<span class="text-xs text-muted">[key: { node.Key }]</span>
+				}
+				if len(node.Extra["presence"]) > 0 {
+					<span class="text-xs text-muted">[presence]</span>
 				}
 				if !node.Config {
 					<span class="text-xs text-warn">state</span>
