@@ -43,7 +43,7 @@ templ TreeNode(node yang.Node, collection string, module string) {
 		if isExpandable(node.Kind) {
 			<div
 				class="flex items-center gap-1 tree-row cursor-pointer rounded px-1 -mx-1 hover:bg-surface"
-				onclick="toggleRow(this, event)"
+				@click="toggleRow($el)"
 				data-detail-url={ "/detail/" + collection + "/" + module + node.Path }
 				hx-get={ "/tree/" + collection + "/" + module + node.Path }
 				hx-target="next ul"
@@ -75,7 +75,7 @@ templ TreeNode(node yang.Node, collection string, module string) {
 					hx-get={ "/detail/" + collection + "/" + module + node.Path }
 					hx-target="#detail-panel"
 					hx-swap="innerHTML"
-					hx-on::before-request="selectNode(this)"
+					hx-on::before-request="selectNode($event.target)"
 				>
 					{ node.Name }
 				</span>

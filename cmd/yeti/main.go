@@ -48,6 +48,8 @@ func main() {
 	mux.HandleFunc("GET /tree/{collection}/{module}", h.Tree)
 	mux.HandleFunc("GET /tree/{collection}/{module}/{path...}", h.Tree)
 	mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
+	mux.HandleFunc("GET /empty/tree", h.EmptyTree)
+	mux.HandleFunc("GET /empty/detail", h.EmptyDetail)
 
 	staticHandler := http.StripPrefix("/static/", http.FileServerFS(static.FS))
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

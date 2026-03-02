@@ -72,7 +72,7 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 			return templ_7745c5c3_Err
 		}
 		if isExpandable(node.Kind) {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex items-center gap-1 tree-row cursor-pointer rounded px-1 -mx-1 hover:bg-surface\" onclick=\"toggleRow(this, event)\" data-detail-url=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex items-center gap-1 tree-row cursor-pointer rounded px-1 -mx-1 hover:bg-surface\" @click=\"toggleRow($el)\" data-detail-url=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -228,7 +228,7 @@ func TreeNode(node yang.Node, collection string, module string) templ.Component 
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" hx-target=\"#detail-panel\" hx-swap=\"innerHTML\" hx-on::before-request=\"selectNode(this)\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" hx-target=\"#detail-panel\" hx-swap=\"innerHTML\" hx-on::before-request=\"selectNode($event.target)\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

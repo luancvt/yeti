@@ -29,7 +29,7 @@ func ModelPicker(modules []string, collection string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative model-picker-wrapper\"><input type=\"text\" placeholder=\"Filter models...\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm w-64\" oninput=\"filterModels(this)\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative model-picker-wrapper\"><input type=\"text\" placeholder=\"Filter models...\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm w-64\" @input=\"filterModels($el)\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -39,7 +39,7 @@ func ModelPicker(modules []string, collection string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for _, name := range modules {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" onmousedown=\"event.preventDefault()\" hx-get=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li class=\"model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary\" @mousedown.prevent hx-get=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -65,7 +65,7 @@ func ModelPicker(modules []string, collection string) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()\" hx-on::after-settle=\"document.getElementById('detail-panel').innerHTML = emptyDetail\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-on::before-request=\"this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()\" hx-on::after-settle=\"resetDetail()\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

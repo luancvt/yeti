@@ -41,7 +41,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\"><div class=\"flex items-center gap-2 px-4 py-3 bg-surface border-b border-border\"><span class=\"text-lg font-bold text-heading tracking-wide\">Yeti</span> <span class=\"text-xs text-muted\">YANG Entry Tree Inspector</span></div><div id=\"split-container\" class=\"flex flex-1 overflow-hidden\"><div id=\"tree-wrapper\" class=\"flex flex-col border-r border-border\" style=\"flex-basis:50%;min-width:200px;flex-shrink:0\"><div class=\"flex items-center gap-3 px-4 py-2 bg-surface border-b border-border\"><select name=\"collection\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" hx-get=\"/models\" hx-include=\"this\" hx-target=\"#model-picker\" hx-swap=\"innerHTML\" hx-trigger=\"change\" hx-on::after-settle=\"document.getElementById('tree-panel').innerHTML = emptyTree; document.getElementById('detail-panel').innerHTML = emptyDetail\"><option value=\"\" disabled")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col h-screen\" x-data=\"{\n\t\t\t\tdragging: false,\n\t\t\t\tresetPanels() {\n\t\t\t\t\thtmx.ajax('GET', '/empty/tree', '#tree-panel');\n\t\t\t\t\thtmx.ajax('GET', '/empty/detail', '#detail-panel');\n\t\t\t\t},\n\t\t\t\tresetDetail() {\n\t\t\t\t\thtmx.ajax('GET', '/empty/detail', '#detail-panel');\n\t\t\t\t},\n\t\t\t\tselectNode(el) {\n\t\t\t\t\tlet prev = document.querySelector('.tree-node-link.selected');\n\t\t\t\t\tif (prev) prev.classList.remove('selected');\n\t\t\t\t\tel.classList.add('selected');\n\t\t\t\t},\n\t\t\t\ttoggleRow(row) {\n\t\t\t\t\tlet link = row.querySelector('.tree-node-link');\n\t\t\t\t\tif (link) this.selectNode(link);\n\t\t\t\t\tif (row.dataset.detailUrl) htmx.ajax('GET', row.dataset.detailUrl, '#detail-panel');\n\t\t\t\t\tif (!row.dataset.loaded) return;\n\t\t\t\t\trow.nextElementSibling.classList.toggle('hidden');\n\t\t\t\t},\n\t\t\t\tfilterModels(input) {\n\t\t\t\t\tlet filter = input.value.toLowerCase();\n\t\t\t\t\tinput.parentElement.querySelectorAll('.model-item').forEach(item => {\n\t\t\t\t\t\titem.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t\tstartDrag(e) {\n\t\t\t\t\tthis.dragging = true;\n\t\t\t\t\te.target.setPointerCapture(e.pointerId);\n\t\t\t\t},\n\t\t\t\tonDrag(e) {\n\t\t\t\t\tif (!this.dragging) return;\n\t\t\t\t\tlet rect = $refs.splitContainer.getBoundingClientRect();\n\t\t\t\t\tlet pct = Math.max(15, Math.min(85, ((e.clientX - rect.left) / rect.width) * 100));\n\t\t\t\t\t$refs.treeWrapper.style.flexBasis = pct + '%';\n\t\t\t\t},\n\t\t\t\tstopDrag() { this.dragging = false; }\n\t\t\t}\" @htmx:after-swap.window=\"let mod = $event.detail.target.dataset?.activeModule; if (mod) { let i = $event.detail.target.querySelector('input'); if (i) i.value = mod; }\" :class=\"{ 'cursor-col-resize select-none': dragging }\" @pointermove.window=\"onDrag($event)\" @pointerup.window=\"stopDrag()\"><div class=\"flex items-center gap-2 px-4 py-3 bg-surface border-b border-border\"><span class=\"text-lg font-bold text-heading tracking-wide\">Yeti</span> <span class=\"text-xs text-muted\">YANG Entry Tree Inspector</span></div><div x-ref=\"splitContainer\" class=\"flex flex-1 overflow-hidden\"><div x-ref=\"treeWrapper\" class=\"flex flex-col border-r border-border\" style=\"flex-basis:50%;min-width:200px;flex-shrink:0\"><div class=\"flex items-center gap-3 px-4 py-2 bg-surface border-b border-border\"><select name=\"collection\" class=\"bg-raised text-body border border-border rounded px-2 py-1 text-sm\" hx-get=\"/models\" hx-include=\"this\" hx-target=\"#model-picker\" hx-swap=\"innerHTML\" hx-trigger=\"change\" hx-on::after-settle=\"resetPanels()\"><option value=\"\" disabled")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -63,7 +63,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 25, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 70, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -86,7 +86,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 25, Col: 76}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 70, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -109,7 +109,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("/models?collection=" + activeCollection)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 31, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 76, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -122,7 +122,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(activeModule)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 34, Col: 41}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 79, Col: 41}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -150,7 +150,7 @@ func Index(collections []string, activeCollection string, activeModule string) t
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("/tree/" + activeCollection + "/" + activeModule)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 43, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/index.templ`, Line: 88, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -161,12 +161,20 @@ func Index(collections []string, activeCollection string, activeModule string) t
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"flex flex-col items-center justify-center h-full gap-3\"><svg class=\"w-12 h-12 text-muted/20\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6Z\"></path></svg><p class=\"text-sm text-muted\">Select a collection and model to browse.</p></div>")
+				templ_7745c5c3_Err = EmptyTree().Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div><div id=\"split-handle\" class=\"split-handle\"></div><div id=\"detail-panel\" class=\"flex-1 overflow-auto p-4 bg-surface\" style=\"min-width:200px\"><div class=\"flex flex-col items-center justify-center h-full gap-3\"><svg class=\"w-12 h-12 text-muted/20\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z\"></path></svg><p class=\"text-sm text-muted\">Click a node in the tree to view its details.</p></div></div></div></div><script>\n\t\t\tvar emptyTree = '<div class=\"flex flex-col items-center justify-center h-full gap-3\"><svg class=\"w-12 h-12 text-muted/20\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6Z\"/></svg><p class=\"text-sm text-muted\">Select a model to browse.</p></div>';\n\t\t\tvar emptyDetail = '<div class=\"flex flex-col items-center justify-center h-full gap-3\"><svg class=\"w-12 h-12 text-muted/20\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z\"/></svg><p class=\"text-sm text-muted\">Click a node in the tree to view its details.</p></div>';\n\n\t\t\tdocument.body.addEventListener('htmx:afterSwap', function(e) {\n\t\t\t\tvar mod = e.detail.target.dataset && e.detail.target.dataset.activeModule;\n\t\t\t\tif (mod) { var i = e.detail.target.querySelector('input'); if (i) i.value = mod; }\n\t\t\t});\n\n\t\t\tfunction selectNode(el) {\n\t\t\t\tvar prev = document.querySelector('.tree-node-link.selected');\n\t\t\t\tif (prev) prev.classList.remove('selected');\n\t\t\t\tel.classList.add('selected');\n\t\t\t}\n\n\t\t\tfunction toggleRow(row, event) {\n\t\t\t\t// Highlight the node\n\t\t\t\tvar link = row.querySelector('.tree-node-link');\n\t\t\t\tif (link) selectNode(link);\n\t\t\t\t// Load detail view\n\t\t\t\tif (row.dataset.detailUrl) {\n\t\t\t\t\thtmx.ajax('GET', row.dataset.detailUrl, '#detail-panel');\n\t\t\t\t}\n\t\t\t\t// Toggle children (skip on first click — HTMX handles that)\n\t\t\t\tif (!row.dataset.loaded) return;\n\t\t\t\tvar ul = row.nextElementSibling;\n\t\t\t\tul.classList.toggle('hidden');\n\t\t\t}\n\n\t\t\tfunction filterModels(input) {\n\t\t\t\tvar filter = input.value.toLowerCase();\n\t\t\t\tinput.parentElement.querySelectorAll('.model-item').forEach(function(item) {\n\t\t\t\t\titem.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t(function() {\n\t\t\t\tvar handle = document.getElementById('split-handle');\n\t\t\t\tvar container = document.getElementById('split-container');\n\t\t\t\tvar tree = document.getElementById('tree-wrapper');\n\t\t\t\tvar dragging = false;\n\n\t\t\t\thandle.addEventListener('pointerdown', function(e) {\n\t\t\t\t\tdragging = true;\n\t\t\t\t\thandle.setPointerCapture(e.pointerId);\n\t\t\t\t\tdocument.body.style.cursor = 'col-resize';\n\t\t\t\t\tdocument.body.style.userSelect = 'none';\n\t\t\t\t});\n\n\t\t\t\tdocument.addEventListener('pointermove', function(e) {\n\t\t\t\t\tif (!dragging) return;\n\t\t\t\t\tvar rect = container.getBoundingClientRect();\n\t\t\t\t\tvar pct = ((e.clientX - rect.left) / rect.width) * 100;\n\t\t\t\t\tpct = Math.max(15, Math.min(85, pct));\n\t\t\t\t\ttree.style.flexBasis = pct + '%';\n\t\t\t\t});\n\n\t\t\t\tdocument.addEventListener('pointerup', function() {\n\t\t\t\t\tif (!dragging) return;\n\t\t\t\t\tdragging = false;\n\t\t\t\t\tdocument.body.style.cursor = '';\n\t\t\t\t\tdocument.body.style.userSelect = '';\n\t\t\t\t});\n\t\t\t})();\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></div><div class=\"split-handle\" @pointerdown=\"startDrag($event)\"></div><div id=\"detail-panel\" class=\"flex-1 overflow-auto p-4 bg-surface\" style=\"min-width:200px\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = EmptyDetail().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

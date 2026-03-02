@@ -108,3 +108,11 @@ func (h *Handler) Detail(w http.ResponseWriter, r *http.Request) {
 
 	view.Detail(node).Render(r.Context(), w)
 }
+
+func (h *Handler) EmptyTree(w http.ResponseWriter, r *http.Request) {
+	view.EmptyTree().Render(r.Context(), w)
+}
+
+func (h *Handler) EmptyDetail(w http.ResponseWriter, r *http.Request) {
+	view.EmptyDetail().Render(r.Context(), w)
+}

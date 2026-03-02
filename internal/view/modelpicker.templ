@@ -6,20 +6,20 @@ templ ModelPicker(modules []string, collection string) {
 			type="text"
 			placeholder="Filter models..."
 			class="bg-raised text-body border border-border rounded px-2 py-1 text-sm w-64"
-			oninput="filterModels(this)"
+			@input="filterModels($el)"
 		/>
 		if len(modules) > 0 {
 			<ul class="model-list absolute top-full left-0 mt-1 w-80 max-h-96 overflow-auto bg-raised border border-border rounded shadow-lg z-10 text-sm">
 				for _, name := range modules {
 					<li
 						class="model-item px-3 py-1 cursor-pointer hover:bg-surface hover:text-primary"
-						onmousedown="event.preventDefault()"
+						@mousedown.prevent
 						hx-get={ "/tree/" + collection + "/" + name }
 						hx-target="#tree-panel"
 						hx-swap="innerHTML"
 						hx-push-url={ "/" + collection + "/" + name }
 						hx-on::before-request="this.closest('.model-picker-wrapper').querySelector('input').value = this.textContent.trim(); this.closest('input')?.blur()"
-						hx-on::after-settle="document.getElementById('detail-panel').innerHTML = emptyDetail"
+						hx-on::after-settle="resetDetail()"
 					>
 						{ name }
 					</li>
