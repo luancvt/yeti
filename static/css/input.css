@@ -99,6 +99,10 @@
     50% { opacity: 0.4; }
   }
 
+  #tree-panel li {
+    list-style: none;
+  }
+
   .split-handle {
     width: 0;
     padding: 0 4px;
