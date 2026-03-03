@@ -52,7 +52,8 @@ func main() {
 	mux.HandleFunc("GET /empty/tree", h.EmptyTree)
 	mux.HandleFunc("GET /empty/detail", h.EmptyDetail)
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "text/plain")
+		fmt.Fprintln(w, "ok")
 	})
 
 	staticHandler := http.StripPrefix("/static/", http.FileServerFS(static.FS))
