@@ -2,7 +2,7 @@ FROM node:22-alpine AS css
 WORKDIR /src
 COPY static/css/input.css static/css/
 COPY . .
-RUN npx -y @tailwindcss/cli -i static/css/input.css -o static/css/tailwind.css --minify
+RUN npm install tailwindcss && npx -y @tailwindcss/cli -i static/css/input.css -o static/css/tailwind.css --minify
 
 FROM golang:1.25-alpine AS build
 WORKDIR /src
