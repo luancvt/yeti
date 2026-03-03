@@ -19,9 +19,6 @@ jobs:
       - name: Install templ
         run: go install github.com/a-h/templ/cmd/templ@v0.3.977
 
-      - name: Install tailwindcss
-        run: npm install -g @tailwindcss/cli
-
       - name: Install golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
@@ -29,7 +26,7 @@ jobs:
           args: --help
 
       - name: Generate CSS
-        run: tailwindcss -i static/css/input.css -o static/css/tailwind.css --minify
+        run: npx -y @tailwindcss/cli -i static/css/input.css -o static/css/tailwind.css --minify
 
       - name: Check templ
         run: templ generate --check
