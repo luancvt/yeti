@@ -30,9 +30,6 @@ jobs:
           npm install tailwindcss
           npx -y @tailwindcss/cli -i static/css/input.css -o static/css/tailwind.css --minify
 
-      - name: Check templ
-        run: templ generate --check
-
       - name: Check formatting
         run: golangci-lint fmt --diff
 

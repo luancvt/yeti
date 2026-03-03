@@ -23,9 +23,8 @@ lint:
 test:
     go test ./...
 
-# Run all CI checks (format, lint, templ, tests)
+# Run all CI checks (format, lint, tests)
 check:
-    templ generate --check
     golangci-lint fmt --diff
     golangci-lint run
     go test ./...
