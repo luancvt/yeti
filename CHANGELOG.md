@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/TerjeLafton/yeti/compare/v0.2.0...v0.3.0) (2026-03-03)
+
+
+### Features
+
+* return ok body from health endpoint ([7d5dfa8](https://github.com/TerjeLafton/yeti/commit/7d5dfa856ce2ec5281cd65aeaba706ab3b4e0e69))
+
+
+### Bug Fixes
+
+* merge release jobs into release-please workflow ([4cdf51e](https://github.com/TerjeLafton/yeti/commit/4cdf51e247bffc86145f0b97de6b515f6c63bf9e))
+
 ## [0.2.0](https://github.com/TerjeLafton/yeti/compare/v0.1.0...v0.2.0) (2026-03-03)
 
 
