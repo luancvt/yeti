@@ -1,0 +1,112 @@
+version: "2"
+
+run:
+  timeout: "5m"
+  relative-path-mode: cfg
+
+linters:
+  default: none
+
+  exclusions:
+    paths:
+      - "libs/gnmi/pkg/models"
+      - "libs/gnmi/yang"
+
+  enable:
+    - asasalint
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - copyloopvar
+    - decorder
+    - dogsled
+    - durationcheck
+    - embeddedstructfieldcheck
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - exptostd
+    - goconst
+    - gocritic
+    - gosec
+    - govet
+    - ineffassign
+    - misspell
+    - nilerr
+    - nilnil
+    - noctx
+    - predeclared
+    - revive
+    - staticcheck
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - wastedassign
+  settings:
+    errcheck:
+      check-blank: true
+      exclude-functions:
+        - github.com/joho/godotenv.Load
+
+    gocritic:
+      disabled-checks:
+        - commentFormatting # Often too pedantic
+        - ifElseChain # Sometimes if-else is clearer than switch
+
+    staticcheck:
+      checks: ["all", "-ST1000", "-ST1003"] # Disable some style checks
+
+    gosec:
+      excludes:
+        - G104 # Audit errors not checked (overlap with errcheck)
+        - G706 # Log injection — flags config/internal values, not user input
+
+    revive:
+      enable-all-rules: true
+      rules:
+        - name: add-constant
+          disabled: true
+        - name: cognitive-complexity
+          disabled: true
+        - name: cyclomatic
+          disabled: true
+        - name: dot-imports
+          disabled: true
+        - name: function-length
+          disabled: true
+        - name: line-length-limit
+          disabled: true
+        - name: max-public-structs
+          disabled: true
+        - name: exported
+          disabled: true
+        - name: nested-structs
+          disabled: true
+        - name: package-comments
+          disabled: true
+        - name: struct-tag
+          arguments:
+            - "json,inline,yaml"
+
+formatters:
+  enable:
+    - gci
+    - gofumpt
+    - goimports
+    - golines
+  exclusions:
+    paths:
+      - "libs/gnmi/pkg/models"
+      - "libs/gnmi/yang"
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - localmodule
+    gofumpt:
+      extra-rules: true
+    golines:
+      max-len: 120

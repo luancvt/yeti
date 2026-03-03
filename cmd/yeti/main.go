@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/terjelafton/yeti/internal/config"
 	"github.com/terjelafton/yeti/internal/handler"
@@ -17,17 +18,9 @@ func main() {
 	configPath := envOr("YETI_CONFIG", "config.yaml")
 	modelsDir := envOr("YETI_MODELS_DIR", "models")
 
-	f, err := os.Open(configPath)
+	cfg, err := loadConfig(configPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error opening config %s: %v\n", configPath, err)
-		os.Exit(1)
-	}
-	defer f.Close()
-
-	cfg, err := config.Load(f)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error loading config: %v\n", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	modelsFS := os.DirFS(modelsDir)
@@ -58,7 +51,7 @@ func main() {
 	mux.HandleFunc("GET /detail/{collection}/{module}/{path...}", h.Detail)
 	mux.HandleFunc("GET /empty/tree", h.EmptyTree)
 	mux.HandleFunc("GET /empty/detail", h.EmptyDetail)
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
@@ -71,8 +64,34 @@ func main() {
 		mux.ServeHTTP(w, r)
 	})
 
+	srv := &http.Server{
+		Addr:         ":8080",
+		Handler:      httpHandler,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
 	log.Println("Yeti running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", httpHandler))
+	log.Fatal(srv.ListenAndServe())
+}
+
+func loadConfig(path string) (*config.Config, error) {
+	f, err := os.Open(path) //nolint:gosec // G304: config path from env/default
+	if err != nil {
+		return nil, fmt.Errorf("opening config %s: %w", path, err)
+	}
+
+	cfg, err := config.Load(f)
+	closeErr := f.Close()
+	if err != nil {
+		return nil, fmt.Errorf("loading config: %w", err)
+	}
+	if closeErr != nil {
+		return nil, fmt.Errorf("closing config: %w", closeErr)
+	}
+
+	return cfg, nil
 }
 
 func envOr(key, fallback string) string {

@@ -1,8 +1,11 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"sort"
+
+	"github.com/a-h/templ"
 
 	"github.com/terjelafton/yeti/internal/view"
 	"github.com/terjelafton/yeti/internal/yang"
@@ -34,7 +37,7 @@ func (h *Handler) Collections() []view.CollectionInfo {
 }
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	view.Index(h.Collections(), "", "").Render(r.Context(), w)
+	render(w, r, view.Index(h.Collections(), "", ""))
 }
 
 func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +56,7 @@ func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view.Index(h.Collections(), collection, module).Render(r.Context(), w)
+	render(w, r, view.Index(h.Collections(), collection, module))
 }
 
 func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
@@ -67,9 +70,9 @@ func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.FormValue("reset") == "true" {
-		view.ModelPickerWithReset(tree.ModuleNames(), collection).Render(r.Context(), w)
+		render(w, r, view.ModelPickerWithReset(tree.ModuleNames(), collection))
 	} else {
-		view.ModelPicker(tree.ModuleNames(), collection).Render(r.Context(), w)
+		render(w, r, view.ModelPicker(tree.ModuleNames(), collection))
 	}
 }
 
@@ -99,9 +102,9 @@ func (h *Handler) Tree(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if pathStr == "" {
-		view.TreeNodeListWithReset(nodes, collection, module).Render(r.Context(), w)
+		render(w, r, view.TreeNodeListWithReset(nodes, collection, module))
 	} else {
-		view.TreeNodeList(nodes, collection, module).Render(r.Context(), w)
+		render(w, r, view.TreeNodeList(nodes, collection, module))
 	}
 }
 
@@ -121,13 +124,19 @@ func (h *Handler) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view.Detail(node).Render(r.Context(), w)
+	render(w, r, view.Detail(node))
 }
 
-func (h *Handler) EmptyTree(w http.ResponseWriter, r *http.Request) {
-	view.EmptyTree().Render(r.Context(), w)
+func (*Handler) EmptyTree(w http.ResponseWriter, r *http.Request) {
+	render(w, r, view.EmptyTree())
 }
 
-func (h *Handler) EmptyDetail(w http.ResponseWriter, r *http.Request) {
-	view.EmptyDetail().Render(r.Context(), w)
+func (*Handler) EmptyDetail(w http.ResponseWriter, r *http.Request) {
+	render(w, r, view.EmptyDetail())
+}
+
+func render(w http.ResponseWriter, r *http.Request, c templ.Component) {
+	if err := c.Render(r.Context(), w); err != nil {
+		log.Printf("render: %v", err)
+	}
 }

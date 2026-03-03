@@ -1,6 +1,7 @@
 package yang
 
 import (
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -27,7 +28,7 @@ type Node struct {
 	Path        string
 	Kind        NodeKind
 	Description string
-	Config      bool   // true = config (rw), false = state (ro)
+	Config      bool // true = config (rw), false = state (ro)
 	Mandatory   bool
 	Default     string
 	Units       string
@@ -186,7 +187,7 @@ func (ct *CollectionTree) GetChildren(module, path string) ([]Node, error) {
 func (ct *CollectionTree) getEntry(module, path string) (*gyang.Entry, error) {
 	parts := strings.Split(strings.TrimPrefix(path, "/"), "/")
 	if len(parts) == 0 || parts[0] == "" {
-		return nil, fmt.Errorf("empty path")
+		return nil, errors.New("empty path")
 	}
 
 	// Try the specified module first

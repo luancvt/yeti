@@ -18,6 +18,14 @@ run: generate css
 build: generate css
     go build -o /dev/null ./cmd/yeti/
 
+# Format code
+fmt:
+    golangci-lint fmt
+
+# Lint code
+lint:
+    golangci-lint run
+
 # Run tests
 test:
     go test ./...
@@ -27,6 +35,7 @@ check:
     templ generate --check
 
 # Download YANG models from YangModels/yang repo
+
 # Usage: just fetch-models xr-7112 vendor/cisco/xr/7112
 fetch-models name repo_path:
     ./scripts/fetch-models.sh {{ name }} {{ repo_path }}
