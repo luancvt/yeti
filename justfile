@@ -20,6 +20,7 @@ build: generate css
 
 # Format code
 fmt:
+    templ fmt .
     golangci-lint fmt
 
 # Lint code
@@ -33,6 +34,7 @@ test:
 # Check generated templ files are up to date
 check:
     templ generate --check
+    golangci-lint fmt --diff
 
 # Download YANG models from YangModels/yang repo
 

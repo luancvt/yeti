@@ -50,20 +50,20 @@ templ Index(collections []CollectionInfo, activeCollection string, activeModule 
 					<div class="flex items-center gap-3 px-4 py-2 bg-surface border-b border-border">
 						<label class="flex items-center gap-1.5 text-xs text-muted">
 							Collection
-						<select
-							name="collection"
-							class="bg-raised text-body border border-border rounded px-2 py-1 text-sm"
-							hx-get="/models?reset=true"
-							hx-include="this"
-							hx-target="#model-picker"
-							hx-swap="innerHTML"
-							hx-trigger="change"
-						>
-							<option value="" disabled selected?={ activeCollection == "" }>Collection...</option>
-							for _, c := range collections {
-								<option value={ c.Name } selected?={ c.Name == activeCollection }>{ c.Display }</option>
-							}
-						</select>
+							<select
+								name="collection"
+								class="bg-raised text-body border border-border rounded px-2 py-1 text-sm"
+								hx-get="/models?reset=true"
+								hx-include="this"
+								hx-target="#model-picker"
+								hx-swap="innerHTML"
+								hx-trigger="change"
+							>
+								<option value="" disabled selected?={ activeCollection == "" }>Collection...</option>
+								for _, c := range collections {
+									<option value={ c.Name } selected?={ c.Name == activeCollection }>{ c.Display }</option>
+								}
+							</select>
 						</label>
 						if activeCollection != "" {
 							<div
