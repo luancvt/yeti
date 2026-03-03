@@ -2,14 +2,6 @@
 dev:
     air
 
-# Generate templ files
-generate:
-    templ generate
-
-# Build Tailwind CSS
-css:
-    tailwindcss -i static/css/input.css -o static/css/tailwind.css --minified
-
 # Run the app
 run: generate css
     go run ./cmd/yeti/
@@ -31,13 +23,22 @@ lint:
 test:
     go test ./...
 
-# Check generated templ files are up to date
+# Run all CI checks (format, lint, templ, tests)
 check:
     templ generate --check
     golangci-lint fmt --diff
+    golangci-lint run
+    go test ./...
+
+# Generate templ files
+generate:
+    templ generate
+
+# Build Tailwind CSS
+css:
+    tailwindcss -i static/css/input.css -o static/css/tailwind.css --minified
 
 # Download YANG models from YangModels/yang repo
-
 # Usage: just fetch-models xr-7112 vendor/cisco/xr/7112
 fetch-models name repo_path:
     ./scripts/fetch-models.sh {{ name }} {{ repo_path }}
