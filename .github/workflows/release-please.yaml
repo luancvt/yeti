@@ -7,12 +7,68 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/terjelafton/yeti
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: googleapis/release-please-action@v4
+        id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${{ needs.release-please.outputs.tag_name }}" | sed 's/=v/=/' >> "$GITHUB_OUTPUT"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.version.outputs.version }}
+            ${{ env.IMAGE }}:latest
+
+  helm:
+    runs-on: ubuntu-latest
+    needs: [release-please, docker]
+    if: ${{ needs.release-please.outputs.release_created }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${{ needs.release-please.outputs.tag_name }}" | sed 's/=v/=/' >> "$GITHUB_OUTPUT"
+
+      - name: Package Helm chart
+        run: helm package charts/yeti --version ${{ steps.version.outputs.version }} --app-version ${{ steps.version.outputs.version }}
+
+      - name: Push Helm chart
+        run: helm push yeti-${{ steps.version.outputs.version }}.tgz oci://ghcr.io/terjelafton/charts
