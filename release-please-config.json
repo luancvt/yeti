@@ -1,0 +1,16 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "helm",
+      "chart-path": "charts/yeti",
+      "bump-minor-pre-major": true,
+      "extra-files": [
+        {
+          "type": "yaml",
+          "path": "charts/yeti/Chart.yaml",
+          "jsonpath": "$.appVersion"
+        }
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 image:
-  repository: yeti
-  tag: latest
+  repository: ghcr.io/terjelafton/yeti
+  tag: ""
   pullPolicy: IfNotPresent
 
 service:

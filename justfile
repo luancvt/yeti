@@ -42,7 +42,7 @@ css:
 install namespace="yeti":
     docker build -t yeti:latest .
     kind load docker-image yeti:latest --name yeti
-    helm upgrade --install yeti ./charts/yeti -n {{ namespace }} --create-namespace
+    helm upgrade --install yeti ./charts/yeti -n {{ namespace }} --create-namespace --set image.repository=yeti --set image.tag=latest
 
 # Download YANG models from YangModels/yang repo
 # Usage: just fetch-models xr-7112 vendor/cisco/xr/7112

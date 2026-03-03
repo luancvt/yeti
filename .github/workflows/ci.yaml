@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - name: Install templ
+        run: go install github.com/a-h/templ/cmd/templ@v0.3.977
+
+      - name: Install tailwindcss
+        run: npm install -g @tailwindcss/cli
+
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2
+          args: --help
+
+      - name: Generate CSS
+        run: tailwindcss -i static/css/input.css -o static/css/tailwind.css --minify
+
+      - name: Check templ
+        run: templ generate --check
+
+      - name: Check formatting
+        run: golangci-lint fmt --diff
+
+      - name: Lint
+        run: golangci-lint run
+
+      - name: Test
+        run: go test ./...
