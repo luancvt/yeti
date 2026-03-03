@@ -9,14 +9,16 @@ service:
 
 resources:
   requests:
-    cpu: 25m
-    memory: 32Mi
-  limits:
     cpu: 100m
-    memory: 128Mi
+    memory: 2Gi
+  limits:
+    cpu: "1"
+    memory: 4Gi
 
-collections: []
-# Example:
-#   - name: xr-7112
-#     display: "Cisco IOS-XR 7.11.2"
-#     path: vendor/cisco/xr/7112
+collections:
+  - name: xr-7112
+    display: "Cisco IOS-XR 7.11.2"
+    path: vendor/cisco/xr/7112
+  - name: xr-2442
+    display: "Cisco IOS-XR 24.4.2"
+    path: vendor/cisco/xr/2442

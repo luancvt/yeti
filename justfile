@@ -38,6 +38,12 @@ generate:
 css:
     tailwindcss -i static/css/input.css -o static/css/tailwind.css --minified
 
+# Build, load into Kind, and install the Helm chart
+install namespace="yeti":
+    docker build -t yeti:latest .
+    kind load docker-image yeti:latest --name yeti
+    helm upgrade --install yeti ./charts/yeti -n {{ namespace }} --create-namespace
+
 # Download YANG models from YangModels/yang repo
 # Usage: just fetch-models xr-7112 vendor/cisco/xr/7112
 fetch-models name repo_path:
