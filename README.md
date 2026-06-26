@@ -18,7 +18,7 @@ kind create cluster --name yeti
 Then install the chart:
 
 ```bash
-helm install yeti oci://ghcr.io/terjelafton/charts/yeti
+helm install yeti oci://ghcr.io/luancvt/charts/yeti
 ```
 
 ### Configuration

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/terjelafton/yeti/internal/config"
-	"github.com/terjelafton/yeti/internal/handler"
-	"github.com/terjelafton/yeti/internal/yang"
-	"github.com/terjelafton/yeti/static"
+	"github.com/luancvt/yeti/internal/config"
+	"github.com/luancvt/yeti/internal/handler"
+	"github.com/luancvt/yeti/internal/yang"
+	"github.com/luancvt/yeti/static"
 )
 
 func main() {

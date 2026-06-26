@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	yeti "github.com/terjelafton/yeti/internal/yang"
+	yeti "github.com/luancvt/yeti/internal/yang"
 )
 
 var _ = Describe("ParseCollection", func() {

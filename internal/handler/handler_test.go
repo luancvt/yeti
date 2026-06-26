@@ -8,8 +8,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/terjelafton/yeti/internal/handler"
-	"github.com/terjelafton/yeti/internal/yang"
+	"github.com/luancvt/yeti/internal/handler"
+	"github.com/luancvt/yeti/internal/yang"
 )
 
 var _ = Describe("Handler", func() {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/a-h/templ"
 
-	"github.com/terjelafton/yeti/internal/view"
-	"github.com/terjelafton/yeti/internal/yang"
+	"github.com/luancvt/yeti/internal/view"
+	"github.com/luancvt/yeti/internal/yang"
 )
 
 type Handler struct {

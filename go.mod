@@ -1,4 +1,4 @@
-module github.com/terjelafton/yeti
+module github.com/luancvt/yeti
 
 go 1.25.0
 
