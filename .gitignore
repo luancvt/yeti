@@ -5,3 +5,4 @@ tmp/
 static/css/tailwind.css
 models/*/
 !models/test/
+.DS_Store

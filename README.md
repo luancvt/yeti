@@ -9,6 +9,14 @@ The chart is in `charts/yeti/`. It includes an init container that fetches YANG 
 
 ### Install
 
+Requires a running Kubernetes cluster. If using Kind:
+
+```bash
+kind create cluster --name yeti
+```
+
+Then install the chart:
+
 ```bash
 helm install yeti oci://ghcr.io/terjelafton/charts/yeti
 ```
