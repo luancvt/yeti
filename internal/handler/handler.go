@@ -1,9 +1,10 @@
 package handler
 
 import (
+	"cmp"
 	"log"
 	"net/http"
-	"sort"
+	"slices"
 
 	"github.com/a-h/templ"
 
@@ -30,8 +31,8 @@ func (h *Handler) Collections() []view.CollectionInfo {
 		}
 		infos = append(infos, view.CollectionInfo{Name: name, Display: display})
 	}
-	sort.Slice(infos, func(i, j int) bool {
-		return infos[i].Name < infos[j].Name
+	slices.SortFunc(infos, func(a, b view.CollectionInfo) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 	return infos
 }
@@ -60,6 +61,7 @@ func (h *Handler) Browse(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // 1 MB
 	collection := r.PathValue("collection")
 	if collection == "" {
 		collection = r.FormValue("collection")
