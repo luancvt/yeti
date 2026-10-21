@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"sort"
+	"slices"
 	"strings"
 
 	gyang "github.com/openconfig/goyang/pkg/yang"
@@ -81,7 +81,7 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 			return nil, fmt.Errorf("reading %s: %w", f, err)
 		}
 		if err := ms.Parse(string(data), f); err != nil {
-			fmt.Fprintf(os.Stderr, "warning: %v\n", err)
+			warnf("warning: %v\n", err)
 			continue
 		}
 	}
@@ -91,7 +91,7 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 	// We log them but continue — the tree is still usable for browsing.
 	errs := ms.Process()
 	for _, err := range errs {
-		fmt.Fprintf(os.Stderr, "warning: %v\n", err)
+		warnf("warning: %v\n", err)
 	}
 
 	tree := &CollectionTree{
@@ -102,7 +102,11 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 		if mod == nil {
 			continue
 		}
-		entry := gyang.ToEntry(mod)
+		entry, err := convertModule(mod)
+		if err != nil {
+			warnf("warning: skipping module %s: %v\n", mod.Name, err)
+			continue
+		}
 		if entry == nil {
 			continue
 		}
@@ -112,13 +116,29 @@ func ParseCollection(fsys fs.FS, path string) (*CollectionTree, error) {
 	return tree, nil
 }
 
+// convertModule recovers the panics goyang raises on unresolved module
+// references so the caller can skip just that module.
+func convertModule(mod *gyang.Module) (entry *gyang.Entry, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("goyang panic: %v", r)
+		}
+	}()
+	return gyang.ToEntry(mod), nil
+}
+
+// warnf logs a warning to stderr; write errors are ignored.
+func warnf(format string, args ...any) {
+	_, _ = fmt.Fprintf(os.Stderr, format, args...)
+}
+
 // ModuleNames returns the sorted list of module names in this collection.
 func (ct *CollectionTree) ModuleNames() []string {
 	names := make([]string, 0, len(ct.modules))
 	for name := range ct.modules {
 		names = append(names, name)
 	}
-	sort.Strings(names)
+	slices.Sort(names)
 	return names
 }
 
@@ -149,8 +169,8 @@ func (ct *CollectionTree) Children() []Node {
 			nodes = append(nodes, entryToNode(child, "/"+child.Name))
 		}
 	}
-	sort.Slice(nodes, func(i, j int) bool {
-		return nodes[i].Name < nodes[j].Name
+	slices.SortFunc(nodes, func(first, second Node) int {
+		return strings.Compare(first.Name, second.Name)
 	})
 	return nodes
 }
@@ -315,7 +335,7 @@ func sortedEntries(dir map[string]*gyang.Entry) []*gyang.Entry {
 	for k := range dir {
 		names = append(names, k)
 	}
-	sort.Strings(names)
+	slices.Sort(names)
 
 	entries := make([]*gyang.Entry, 0, len(names))
 	for _, name := range names {

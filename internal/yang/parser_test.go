@@ -2,6 +2,7 @@ package yang_test
 
 import (
 	"os"
+	"testing/fstest"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -185,5 +186,61 @@ var _ = Describe("ParseCollection", func() {
 			_, err := tree.GetChildren("nonexistent", "/foo")
 			Expect(err).To(HaveOccurred())
 		})
+	})
+})
+
+var _ = Describe("ParseCollection with unresolved imports", func() {
+	const keystoreConsumer = `module keystore-consumer {
+  namespace "urn:example:keystore-consumer";
+  prefix kc;
+
+  import ietf-keystore {
+    prefix ks;
+  }
+
+  container tls {
+    uses ks:keystore-grouping;
+  }
+}
+`
+
+	const standalone = `module standalone {
+  namespace "urn:example:standalone";
+  prefix sa;
+
+  container system {
+    leaf hostname {
+      type string;
+    }
+  }
+}
+`
+
+	var tree *yeti.CollectionTree
+
+	BeforeEach(func() {
+		modelsFS := fstest.MapFS{
+			"unresolved/keystore-consumer.yang": &fstest.MapFile{Data: []byte(keystoreConsumer)},
+			"unresolved/standalone.yang":        &fstest.MapFile{Data: []byte(standalone)},
+		}
+		var err error
+		tree, err = yeti.ParseCollection(modelsFS, "unresolved")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(tree).NotTo(BeNil())
+	})
+
+	It("skips modules that use groupings from a missing module", func() {
+		Expect(tree.ModuleNames()).To(Equal([]string{"standalone"}))
+	})
+
+	It("still serves modules with no reference to the missing module", func() {
+		children, err := tree.ModuleChildren("standalone")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(children).To(HaveLen(1))
+		Expect(children[0].Name).To(Equal("system"))
+
+		node, err := tree.GetNode("standalone", "/system/hostname")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(node.Kind).To(Equal(yeti.KindLeaf))
 	})
 })
