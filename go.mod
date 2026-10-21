@@ -25,4 +25,4 @@ require (
 	golang.org/x/tools v0.41.0 // indirect
 )
 
-replace github.com/openconfig/goyang => github.com/hansthienpondt/goyang v1.6.0-fixrpc
+replace github.com/openconfig/goyang => ./third_party/goyang

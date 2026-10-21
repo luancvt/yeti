@@ -11,6 +11,7 @@ linters:
     paths:
       - "libs/gnmi/pkg/models"
       - "libs/gnmi/yang"
+      - "third_party/goyang"
 
   enable:
     - asasalint
@@ -100,6 +101,7 @@ formatters:
     paths:
       - "libs/gnmi/pkg/models"
       - "libs/gnmi/yang"
+      - "third_party/goyang"
   settings:
     gci:
       sections:
