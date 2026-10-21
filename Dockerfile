@@ -7,6 +7,7 @@ RUN npm install tailwindcss && npx -y @tailwindcss/cli -i static/css/input.css -
 FROM golang:1.25-alpine AS build
 WORKDIR /src
 COPY go.mod go.sum ./
+COPY third_party/goyang third_party/goyang
 RUN go mod download
 COPY . .
 COPY --from=css /src/static/css/tailwind.css static/css/tailwind.css
