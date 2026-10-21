@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/luancvt/yeti/compare/v0.4.1...v0.4.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* include vendored goyang in docker module download layer ([78ecb86](https://github.com/luancvt/yeti/commit/78ecb8661098aa6695181b67dcfdf5275c308c89))
+
 ## [0.4.1](https://github.com/luancvt/yeti/compare/v0.4.0...v0.4.1) (2026-10-21)
 
 
