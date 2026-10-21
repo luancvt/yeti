@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/luancvt/yeti/compare/v0.4.0...v0.4.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* parse multiple augments per uses statement ([2cb9b4e](https://github.com/luancvt/yeti/commit/2cb9b4e121c394c7bad832d46c3c3f479da0ecf0))
+* skip modules with unresolved references instead of crashing ([8db66b2](https://github.com/luancvt/yeti/commit/8db66b2132a2bdf5ecf317222f14d6e1dd35c40b))
+
 ## [0.4.0](https://github.com/luancvt/yeti/compare/v0.3.0...v0.4.0) (2026-06-26)
 
 
